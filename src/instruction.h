@@ -14,7 +14,7 @@
 #define ADD 0
 #define MUL 1
 
-std::unordered_map<std::string, unsigned short> OPCODE_MAP = {
+const std::unordered_map<std::string, unsigned short> OPCODE_MAP = {
     {"ADD", R_TYPE},
     {"MUL", R_TYPE},
     {"BEQ", BEQ},
@@ -24,7 +24,7 @@ std::unordered_map<std::string, unsigned short> OPCODE_MAP = {
     {"SW", SW},
 };
 
-std::unordered_map<std::string, unsigned short> FUNCTION_MAP = {
+const std::unordered_map<std::string, unsigned short> FUNCTION_MAP = {
     {"ADD", ADD},
     {"MUL", MUL},
 };
