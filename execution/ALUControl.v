@@ -8,6 +8,7 @@ output reg [3:0] ALUControl;
 
 parameter LW = 2'b00;
 parameter SW = 2'b00;
+parameter ADDI = 2'b00;
 parameter BEQ = 2'b01;
 parameter RType = 2'b10;
 parameter ADD = 6'b000000;
@@ -23,7 +24,10 @@ LW:
 
 SW:
 	ALUControl = 4'b0000;
-	
+
+ADDI:
+	ALUControl = 4'b0000;
+
 BEQ:
 	ALUControl = 4'b0001;
 
