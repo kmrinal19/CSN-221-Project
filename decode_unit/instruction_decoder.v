@@ -1,3 +1,8 @@
+`include "decode_unit/Mux2_1_5.v"
+`include "decode_unit/Mux2_1_32.v"
+`include "decode_unit/RegisterFile.v"
+`include "decode_unit/SignExtend.v"
+
 module instruction_decoder (
     inst_read_reg_addr1,
     inst_read_reg_addr2,

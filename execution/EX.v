@@ -1,7 +1,7 @@
-`include "ALU.v"
-`include "ALUControl.v"
+`include "execution/ALU.v"
+`include "execution/ALUControl.v"
 
-module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, funct, reset, pc);
+module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, funct, reset, pc, zero, carry, address, resultOut, pcout);
 
 input wire reset;        //To start from a known state - not necessary
 input clk;
@@ -13,17 +13,16 @@ input wire [31:0] sign_ext;
 input wire ALUSrc;          //to choose bw rt and sign extend ,from cu
 input wire [1:0] ALUOp;     //from cu
 input wire [5:0] funct;     //from decode unit
-wire [3:0] ALUControl;      
-wire [31:0] result;
+
 output wire zero, carry;
 output reg [31:0] address;
-reg offset;
-// output reg [3:0] ALUControlOut;
 output reg [31:0] resultOut;
 output reg [31:0] pcout;
+// output reg [3:0] ALUControlOut;
 
-
-
+wire [3:0] ALUControl;      
+wire [31:0] result;
+reg offset;
 // wire [31:0] neg_data2 = -data2;
 wire [31:0] data1 = rs;
 reg [31:0] data2;
@@ -53,7 +52,7 @@ ALUUnit A (
 
 always @(branch)
 begin
-    if (branch==1  && zero==0)
+    if (branch==1  && zero==1)
         offset = sign_ext<<2;
         address = offset + pc;
         pcout = address;
@@ -61,10 +60,8 @@ end
 
 
 always@(posedge clk)
-    begin
-    
-      resultOut<=result;
-      
+    begin    
+      resultOut<=result;      
     end
 
 endmodule
