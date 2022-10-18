@@ -1,8 +1,8 @@
 `include "decode_unit/Mux2_1_5.v"
-`include "decode_unit/Mux2_1_32.v"
+// `include "decode_unit/Mux2_1_32.v"
 `include "decode_unit/RegisterFile.v"
 `include "decode_unit/SignExtend.v"
-`include "decode_unit/LeftShift2.v"
+//`include "decode_unit/LeftShift2.v"
 
 module instruction_decoder (
     clk,
