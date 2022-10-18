@@ -6,13 +6,13 @@ module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,a
   output reg [1:0] alu_op;
   
   parameter LW = 2'b00;
-parameter SW = 2'b00;
-parameter ADDI = 2'b00;
-parameter BEQ = 2'b01;
-parameter RType = 2'b10;
-parameter ADD = 6'b000000;
-parameter SUB = 6'b000001;
-parameter MUL = 6'b000010;
+  parameter SW = 2'b00;
+  parameter ADDI = 2'b00;
+  parameter BEQ = 2'b01;
+  parameter RType = 2'b10;
+  parameter ADD = 6'b000000;
+  parameter SUB = 6'b000001;
+  parameter MUL = 6'b000010;
 
 
   always @(posedge reset)
@@ -21,7 +21,7 @@ parameter MUL = 6'b000010;
    branch <= 1'b0;
    mem_read <= 1'b0;
    mem_to_reg <= 1'b0;
-   alu_op <= 4'b0000;
+   alu_op <= 2'b00;
    mem_write <= 1'b0;
    alu_src <= 1'b0;
    reg_write <= 1'b0;
@@ -42,9 +42,7 @@ parameter MUL = 6'b000010;
           alu_src<=0 ;
           reg_write<=1 ;
           alu_op<=2'b10;
-          end
-          
-          
+          end  
         
         LW:           
 
@@ -66,7 +64,7 @@ parameter MUL = 6'b000010;
           //reg_dst<=1'bx ;
           branch<=0 ;
           mem_read<=0 ;
-          mem_to_reg<=0 ;
+          mem_to_reg<=0 ;    //may be used in hazard detection -- assertion indicates register has been written
           mem_write<=1 ;
           alu_src<=1 ;
           reg_write<=0 ;

@@ -1,6 +1,5 @@
 module ALUControlUnit(ALUControl, ALUOp, funct);
 
-
 // input clk;
 input wire [1:0] ALUOp;
 input wire [5:0] funct;
