@@ -17,7 +17,7 @@
 // endmodule
 
 module WriteBack (mem_to_reg, alu_data_out, dm_data_out, clk, wb_data);
-
+//todo: add reset
 input mem_to_reg, clk;
 input [31:0] alu_data_out, dm_data_out;
 output reg [31:0] wb_data;

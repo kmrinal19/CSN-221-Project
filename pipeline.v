@@ -30,9 +30,10 @@ module pipeline;
     wire [5:0] funct;
     wire [31:0] branch_address; 
     wire [31:0] pcout, resultOut, Mem_address, Write_data;
-    wire Mem_read, Mem_write; 
-    // wire [31:0] 
-    // wire [31:0] 
+    wire Mem_read, Mem_write, mem_to_reg_out_dm_wb; 
+    wire [31:0] Read_Data, read_data_out_wb, alu_res_out_wb;
+
+    
 
 
     Instruction_Memory IM (
@@ -136,9 +137,38 @@ module pipeline;
         .Mem_read_out(mem_read_out_id_ex), 
         .Mem_write_out(mem_write_out_id_ex), 
         .Write_data_out(Write_data), 
-        .clk()
+        .clk(clk)
+    );
+
+    DataMemory DM (
+        .clk(clk),
+        .reset(reset),
+        .Mem_read(Mem_read_out),
+        .Mem_write(Mem_write_out),
+        .Mem_address(Mem_address),
+        .Write_data(Write_data),
+        .Read_Data(Read_Data)
+    );
+
+    MEM_WB_reg DM_WB (
+        .clk(clk),
+        .alu_result(resultOut),
+        .read_data(Read_Data),
+        .mem_to_reg(mem_to_reg_out_ex_dm),
+        .mem_to_reg_out_dm_wb(mem_to_reg_out_dm_wb),
+        .read_data_out(read_data_out_wb),
+        .alu_res_out(alu_res_out_wb)
+    );
+
+    WriteBack WB(
+        .clk(clk),
+        .mem_to_reg(mem_to_reg_out_dm_wb),
+        .alu_data_out(alu_res_out_wb),
+        .dm_data_out(read_data_out_wb),
+        .wb_data(reg_wr_data)
     );
     
+
 
 
     
