@@ -1,25 +1,25 @@
 module instruction_decoder (
     inst_read_reg_addr1,
     inst_read_reg_addr2,
-    rt,
+    rt, // Redundant input, same as inst_read_reg_addr2
     rd,
-    alu_data_out,
-    mem_data_out,
+    alu_data_out, // Redundant, to be included in WB stage
+    mem_data_out, // Redundant, to be included in WB stage
     inst_imm_field,
     reg_dst,
-    mem_to_reg,
-    jr_offset,
+    mem_to_reg, // Redundant, to be included in WB stage
+    jr_offset, // What is jr_offset?
     reg_file_rd_data1,
     reg_file_rd_data2,
-    imm_field_wo_sgn_ext,
+    imm_field_wo_sgn_ext, // wo: without
     sgn_ext_imm,
     imm_sgn_ext_lft_shft
 );
 
     input [4:0] inst_read_reg_addr1 ,inst_read_reg_addr2, rt, rd;
-    input [31:0] alu_data_out, mem_data_out;
+    input [31:0] alu_data_out, mem_data_out; // Redundant, to be included in WB stage
     input [15:0] inst_imm_field;
-    input reg_dst, mem_to_reg;
+    input reg_dst, mem_to_reg; // Redundant mem_to_reg signal, to be included in WB stage
     output [31:0] jr_offset, reg_file_rd_data1, reg_file_rd_data2, sgn_ext_imm, imm_sgn_ext_lft_shft;
     output [15:0] imm_field_wo_sgn_ext;
 
