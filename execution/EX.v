@@ -112,12 +112,12 @@ case(ALUControl)
 	end
 	
 
-4'b0010:
+4'b0001:
 	begin
 	result <= data1 - data2;
 	end
 	
-4'b0011:
+4'b0010:
 	begin
 	result <= data1 * data2;
 	end

@@ -1,9 +1,10 @@
 `timescale 1ns / 1ps
-`include "write_back.v"
+`include "write_back/write_back.v"
 
 module wb_tb();
     reg mem_to_reg, clk;
-    reg [31:0] alu_data_out, dm_data_out, wb_data;
+    reg [31:0] alu_data_out, dm_data_out;
+    wire [31:0] wb_data;
 
 
 // instantiate testbench

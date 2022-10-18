@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-// `include "IF_Unit/Instruction_Memory.v"
+`include "IF_Unit/Instruction_Memory.v"
 
 module testb;
     reg clk;

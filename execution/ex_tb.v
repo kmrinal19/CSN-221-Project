@@ -57,7 +57,7 @@ module testb;
         ALUSrc = 1'b1;
         funct = 6'b000010;
         ALUOp = 2'b10;
-      	branch = 1'b0;
+      	branch = 1'b1;
         #40
         $display ("time=%3d, address=%b, zero=%b, result=%d, pcout=%b \n", $time, address, zero, resultOut, pcout);
       	$finish;
