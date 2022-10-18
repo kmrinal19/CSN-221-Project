@@ -36,7 +36,7 @@ module testb;
 
         #10
       
-      	pc = 4;
+      	pc = 32'd4;
       	
       	#30
       
