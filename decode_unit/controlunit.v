@@ -5,15 +5,11 @@ module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,a
   output reg reg_dst,branch,mem_read,mem_to_reg,mem_write,alu_src,reg_write;
   output reg [1:0] alu_op;
   
-  parameter LW = 2'b00;
-  parameter SW = 2'b00;
-  parameter ADDI = 2'b00;
-  parameter BEQ = 2'b01;
-  parameter RType = 2'b10;
-  parameter ADD = 6'b000000;
-  parameter SUB = 6'b000001;
-  parameter MUL = 6'b000010;
-
+  parameter RType=6'b000000;
+  parameter LW=6'b000001;
+  parameter SW=6'b000010;
+  parameter BEQ=6'b000011;
+  parameter ADDI = 6'b000100; //aluop same as sw and lw
 
   always @(posedge reset)
   begin
