@@ -5,6 +5,8 @@
 `include "decode_unit/LeftShift2.v"
 
 module instruction_decoder (
+    clk,
+    reset,
     inst_read_reg_addr1,
     inst_read_reg_addr2,
     // rt removed (Redundant input, same as inst_read_reg_addr2)
@@ -14,6 +16,7 @@ module instruction_decoder (
     // mem_data_out removed (Redundant, to be included in WB stage)
     inst_imm_field,
     reg_dst,
+    reg_write,
     // mem_to_reg removed (Redundant, to be included in WB stage)
     // jr_offset removed (What is jr_offset?)
     reg_file_rd_data1,
@@ -22,14 +25,14 @@ module instruction_decoder (
     sgn_ext_imm,
     imm_sgn_ext_lft_shft
 );
-
+    input clk, reset, reg_write;
     input [4:0] inst_read_reg_addr1 ,inst_read_reg_addr2, rd; //rt removed
     // input [31:0] alu_data_out, mem_data_out; (Redundant, to be included in WB stage)
     input [15:0] inst_imm_field;
     input [31:0] reg_wr_data; // Added reg_wr_data
     input reg_dst; // mem_to_reg removed(Redundant mem_to_reg signal, to be included in WB stage)
     output [31:0] reg_file_rd_data1, reg_file_rd_data2, sgn_ext_imm, imm_sgn_ext_lft_shft;
-    output reg [15:0] imm_field_wo_sgn_ext;
+    output wire [15:0] imm_field_wo_sgn_ext;
 
     // computing multiplexer results
     wire [4:0] reg_wr_addr; // Changed reg to wire due to error in line 37
@@ -38,20 +41,22 @@ module instruction_decoder (
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
 
     // register file
-    RegisterFile regiterFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_wr_data, reg_wr, clk, reg_file_rd_data1, reg_file_rd_data2);
+    RegisterFile registerFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_wr_data, reg_write, clk, reg_file_rd_data1, reg_file_rd_data2);
 
     // sign extension
     SignExtend signExtend(inst_imm_field, sgn_ext_imm);
 
     // left shift
-    LeftShift2 left_shift(sgn_ext_imm, imm_sgn_ext_lft_shft);
+    assign imm_sgn_ext_lft_shft = sgn_ext_imm << 2;
 
     // always @(reg_file_rd_data1) begin
     //     jr_offset <= reg_file_rd_data1;
     // end
 
-    always @(inst_imm_field) begin
-        imm_field_wo_sgn_ext <= inst_imm_field;
-    end
+    assign imm_field_wo_sgn_ext = inst_imm_field;
+
+    // always @(inst_imm_field) begin
+    //     imm_field_wo_sgn_ext <= inst_imm_field;
+    // end
     
 endmodule
