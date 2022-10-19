@@ -59,7 +59,7 @@ module instruction_decoder (
     // always @(inst_imm_field) begin
     //     imm_field_wo_sgn_ext <= inst_imm_field;
     // end
-
+    // integer index = rd;
     always @(posedge clk)
     begin
         if (reg_write==1)
