@@ -41,7 +41,7 @@ module instruction_decoder (
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
 
     // register file
-    RegisterFile registerFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_wr_data, reg_write, clk, reg_file_rd_data1, reg_file_rd_data2);
+    RegisterFile registerFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_wr_data, reg_write, clk, reg_file_rd_data1, reg_file_rd_data2, reset);
 
     // sign extension
     SignExtend signExtend(inst_imm_field, sgn_ext_imm);

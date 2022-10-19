@@ -1,4 +1,4 @@
-module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, funct, branch, reset, pc, zero, address, resultOut, pcout);
+module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, funct, branch, reset, pc, zero, address, resultOut, pcout, offset);
 
 input wire reset;        //To start from a known state - not necessary
 input clk;
@@ -20,14 +20,14 @@ output reg [31:0] pcout;
 
 // wire [3:0] ALUControl;      
 // wire [31:0] result;
-reg offset;
+output reg [31:0] offset;
 // wire [31:0] neg_data2 = -data2;
 wire [31:0] data1 = rs;
 reg [31:0] data2;
 // pcout = pc;
 
 always @(ALUSrc)
-#10
+#1
 begin
 if(ALUSrc == 0)
 data2 <= rt;
@@ -47,7 +47,7 @@ parameter SUB = 6'b000001;
 parameter MUL = 6'b000010;
 
 always @* 
-#10
+#1
 begin
     pcout = pc;
 case(ALUOp)
@@ -96,7 +96,7 @@ end
 // parameter SUB = 4'b0001;
 always @(posedge reset) zero <= 1'b0;
 always @(ALUControl or data1 or data2)
-#10
+#1
 begin
 
 if(data1 == data2)
@@ -124,19 +124,34 @@ case(ALUControl)
 
 
 endcase
+
+if (branch==1 && zero==1)
+    begin
+        $display("hello");
+        offset = sign_ext<<2;
+        // #1
+        // address = offset + pc;
+        // #1
+        // pcout = address;
+    end
+// $display("hello");
 end
 
-always @(branch)
+always @(branch or zero)
+// #1
 begin
-    if (branch==1  && zero==1)
+    if (branch==1 && zero==1)
+    begin
+        $display("hello");
         offset = sign_ext<<2;
         address = offset + pc;
-        pcout = address;
+        assign pcout = address;
+    end
 end
 
 
 always@(posedge clk)
-#10
+
     begin    
       resultOut<=result;     
     end

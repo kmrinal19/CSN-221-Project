@@ -9,12 +9,13 @@
 `include "registers/DM_WB_reg.v"
 `include "decode_unit/controlunit.v"
 `include "decode_unit/instruction_decoder.v"
+// `include "decode_unit/RegisterFile.v"
 
 
-module pipeline;
-    reg clk;
-    wire mem_to_reg_out_ex_dm;
-	reg reset;
+module pipeline();
+    reg clk, reset;
+    wire mem_to_reg_out_ex_dm;	
+    reg [31:0] registers[0:31];
     wire [31:0] pc;
     reg [31:0] Imemory [0:1023];
     wire [31:0] inp_instn;
@@ -32,13 +33,9 @@ module pipeline;
     wire [31:0] pcout, resultOut, Mem_address, Write_data;
     wire Mem_read, Mem_write, mem_to_reg_out_dm_wb; 
     wire [31:0] Read_Data, read_data_out_wb, alu_res_out_wb;
-
-    
-
-
     Instruction_Memory IM (
         .clk(clk),
-        .pc(pc),
+        .pc(nextpc),
       	.reset(reset),
         .inp_instn(inp_instn),
         .nextpc(nextpc),
@@ -53,9 +50,6 @@ module pipeline;
         .currpc_out(currpc_out),
         .out_instn(out_instn)
     );
-
-
-
     assign opcode = inp_instn[31:26]; // changes to be made in controlunit.v
     assign inst_read_reg_addr1 = inp_instn[25:21];
     assign inst_read_reg_addr2 = inp_instn[20:16];
@@ -168,7 +162,37 @@ module pipeline;
         .wb_data(reg_wr_data)
     );
     
+    always@(clk)
+    #10 clk <= ~clk;
 
+    initial
+    begin
+
+    clk <= 0;
+    reset <= 1;
+    #500
+    reset <= 0;
+
+    end
+    
+    // initial 
+    // begin
+    //     clk = 1'b0;
+    //     forever #3 clk = ~clk;
+    // end
+
+    // initial 
+    // begin
+    //     reset = 1'b1;
+    //     #100 reset = 1'b0;
+    // end
+    
+    // initial 
+    // begin
+    //     $10
+    //     $display ("time=%3d, address=%b, zero=%b, result=%d, pcout=%b, offset%b \n", $time, address, zero, resultOut, pcout, offset);
+    //   	$finish;
+    // end
 
 
     
