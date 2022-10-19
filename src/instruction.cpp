@@ -46,7 +46,7 @@ Instruction *Instruction::find_class_and_parse(std::string raw_instruction)
 		return i_instruction;
 	}
 }
-RInstruction::RInstruction(short opcode_type, std::vector<std::string> operands, unsigned short function) : Instruction(opcode_type)
+RInstruction::RInstruction(short opcode_type, std::vector<std::string> operands, unsigned short fn) : Instruction(opcode_type)
 {
 	// TODO: Handle errors for operands
 	if (operands.size() == 3)
@@ -54,7 +54,7 @@ RInstruction::RInstruction(short opcode_type, std::vector<std::string> operands,
 		rs = parse_register_string(operands[0]);
 		rt = parse_register_string(operands[1]);
 		rd = parse_register_string(operands[2]);
-		function = function;
+		function = fn;
 	}
 }
 
@@ -62,7 +62,7 @@ unsigned int RInstruction::parse()
 {
 	unsigned int instruction(0);
 	unsigned int opcode(get_instruction_opcode());
-	instruction = (((opcode << 8 | this->rs) << 5 | this->rt) << 5 | this->rd) << 3 | this->function << 8;
+	instruction = (((opcode << 5 | this->rs) << 5 | this->rt) << 5 | this->rd) << 11 | this->function;
 	return instruction;
 }
 
@@ -82,7 +82,7 @@ unsigned int IInstruction::parse()
 	// TODO: Handle errors for instruction params
 	unsigned int instruction(0);
 	unsigned int opcode(get_instruction_opcode());
-	instruction = ((opcode << 8 | this->rs) << 5 | this->rt) << 5 | this->address;
+	instruction = ((opcode << 5 | this->rs) << 5 | this->rt) << 16 | this->address;
 	return instruction;
 }
 
@@ -92,7 +92,7 @@ UJInstruction::UJInstruction(short opcode_type, std::vector<std::string> operand
 	short opcode = opcode_type;
 	if (operands.size() == 1)
 	{
-		address = (unsigned int)std::stoul(operands[0]);
+		address = LABEL_MAP[operands[0]];
 	}
 }
 
@@ -100,7 +100,7 @@ unsigned int UJInstruction::parse()
 {
 	unsigned int instruction(0);
 	unsigned int opcode(get_instruction_opcode());
-	instruction = opcode << 29 | this->address;
+	instruction = opcode << 26 | this->address;
 
 	return instruction;
 }

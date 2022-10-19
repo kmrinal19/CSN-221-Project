@@ -40,6 +40,7 @@ std::vector<std::string> split(std::string str, char ch){
         }
         i++;
     }
+    trim(s);
     splitted_str.push_back(s);
     return splitted_str;
 }
