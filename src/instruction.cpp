@@ -51,9 +51,9 @@ RInstruction::RInstruction(short opcode_type, std::vector<std::string> operands,
 	// TODO: Handle errors for operands
 	if (operands.size() == 3)
 	{
-		rs = parse_register_string(operands[0]);
-		rt = parse_register_string(operands[1]);
-		rd = parse_register_string(operands[2]);
+		rs = parse_register_string(operands[1]);
+		rt = parse_register_string(operands[2]);
+		rd = parse_register_string(operands[0]);
 		function = fn;
 	}
 }
@@ -71,8 +71,8 @@ IInstruction::IInstruction(short opcode_type, std::vector<std::string> operands)
 	// TODO: Handle errors for operands
 	if (operands.size() == 3)
 	{
-		rs = parse_register_string(operands[0]);
-		rt = parse_register_string(operands[1]);
+		rs = parse_register_string(operands[1]);
+		rt = parse_register_string(operands[0]);
 		address = (unsigned short)stoi(operands[2]);
 	}
 }
