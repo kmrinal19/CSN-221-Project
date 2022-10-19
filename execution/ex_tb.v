@@ -16,7 +16,7 @@ module testb;
     wire [31:0] resultOut;
     wire [31:0] pcout;
 
-    main tb (
+    EX tb (
         .clk (clk),
         .reset (reset),
         .rs (rs),

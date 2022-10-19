@@ -1,4 +1,4 @@
-module main(clk, rs, rt, sign_ext, ALUSrc, ALUOp, funct, branch, reset, pc, zero, address, resultOut, pcout);
+module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, funct, branch, reset, pc, zero, address, resultOut, pcout);
 
 input wire reset;        //To start from a known state - not necessary
 input clk;
@@ -138,7 +138,7 @@ end
 always@(posedge clk)
 #10
     begin    
-      resultOut<=result;      
+      resultOut<=result;     
     end
 
 endmodule

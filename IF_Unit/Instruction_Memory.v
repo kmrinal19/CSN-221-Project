@@ -10,7 +10,7 @@ output reg [31:0] pc_to_branch;
 
 initial //for testing
     begin
-        $readmemb("Icode.txt", Imemory);
+        $readmemb("IF_Unit/Icode.txt", Imemory);
     end
 
 

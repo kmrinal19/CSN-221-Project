@@ -12,6 +12,7 @@ module dm_test_bench;
 
   DataMemory tb (
     .clk(clk),
+    .reset(reset),
     .Mem_read(Mem_read),
     .Mem_write(Mem_write),
     .Mem_address(Mem_address),
