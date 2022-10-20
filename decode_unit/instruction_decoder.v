@@ -34,7 +34,7 @@ module instruction_decoder (
     input [31:0] reg_wr_data; // Added reg_wr_data
     input reg_dst; // mem_to_reg removed(Redundant mem_to_reg signal, to be included in WB stage)
     output [31:0] reg_file_rd_data1, reg_file_rd_data2, sgn_ext_imm, imm_sgn_ext_lft_shft;
-    output wire [15:0] imm_field_wo_sgn_ext;
+    output reg [15:0] imm_field_wo_sgn_ext;
     output reg [4:0] rd_out_id;
     // computing multiplexer results
     wire [4:0] reg_wr_addr; // Changed reg to wire due to error in line 37
@@ -56,11 +56,11 @@ module instruction_decoder (
     //     jr_offset <= reg_file_rd_data1;
     // end
 
-    assign imm_field_wo_sgn_ext = inst_imm_field;
+    // assign imm_field_wo_sgn_ext = inst_imm_field; //Added below block in place
 
-    // always @(inst_imm_field) begin
-    //     imm_field_wo_sgn_ext <= inst_imm_field;
-    // end
+    always @(inst_imm_field) begin
+        imm_field_wo_sgn_ext <= inst_imm_field;
+    end
     // always @(posedge clk)
     // begin
     //     rd_out_id <= reg_wr_addr;

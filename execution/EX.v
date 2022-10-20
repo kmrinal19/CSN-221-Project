@@ -26,7 +26,7 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
     reg [31:0] data2;
     // pcout = pc;
 
-    always @(ALUSrc)
+    always @(ALUSrc or rt or sign_ext)
     #1
     begin
     if(ALUSrc == 0)

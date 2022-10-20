@@ -25,8 +25,8 @@ module RegisterFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_w
 			registers[12] <= 32'd0;
 			registers[13] <= 32'd0;
 			registers[14] <= 32'd0;
-			registers[15] <= 32'd0;
-			registers[16] <= 32'd0;
+			registers[15] <= 32'd15;
+			registers[16] <= 32'd16;
 			registers[17] <= 32'd0;
 			registers[18] <= 32'd0;
 			registers[19] <= 32'd0;

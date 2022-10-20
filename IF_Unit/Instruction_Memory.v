@@ -11,7 +11,7 @@ output reg [31:0] pc_to_branch;
 
 initial //for testing
     begin
-        $readmemb("m.bin", Imemory);
+        $readmemb("Icode.txt", Imemory);
     end
 
 always @ (posedge reset)
@@ -25,11 +25,17 @@ always @ (posedge reset)
     end
 always @ (pc)
     begin
-        #20000
+        #20  //enabling this leads to $readmemb: Unable to open Icode.txt for reading.
         $display ("time=%3d, inp_instn=%b, nextpc=%b, pc_to _branch=%b \n", $time, inp_instn, nextpc, pc_to_branch);
         inp_instn  = Imemory[pc/4];  //Was given to be [pc>>2]
         pc_to_branch = pc;
         nextpc <= pc+32'd4;             // pc value is not being updated, so the pc in next cycle will be the nextpc outpur received in this cycle
+        
+    end
+always @ (pc)
+    begin
+    if (nextpc==32'd56)
+        $finish;
     end
 
 endmodule
