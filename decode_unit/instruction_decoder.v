@@ -89,7 +89,7 @@ module instruction_decoder (
 
     // left shift
     //#1
-    assign imm_sgn_ext_lft_shft = sgn_ext_imm << 2;
+    assign imm_sgn_ext_lft_shft = sgn_ext_imm << 2; //redundant
 
     // always @(reg_file_rd_data1) begin
     //     jr_offset <= reg_file_rd_data1;
@@ -128,12 +128,13 @@ module instruction_decoder (
     reg [4:0] flag_reg_wr_addr;
     reg [4:0] flag_reg_wr_addr_wb;
     always @(negedge clk or reg_wr_addr)
+    #10
     begin
         flag_reg_wr_addr <= reg_wr_addr;
         flag_reg_wr_addr_wb <= reg_wr_addr_wb;
         rd_out_id <= reg_wr_addr;
         #1
-        
+        // $display("check address= %d",rd_out_id);
         if (reg_write_cu==1)
             registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set 
         if (reg_write==1)

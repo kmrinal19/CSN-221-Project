@@ -135,7 +135,10 @@ module pipeline();
         // .reset(reset),
         // .rd_out_id_ex(rd_out_id_ex)
 
-        branch, reg_write, mem_to_reg, mem_write, mem_read, rd_in_id_ex, alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, rd_out_id_ex
+        branch, reg_write, mem_to_reg, mem_write, mem_read, 
+        // rd_in_id_ex, replacing with rd_out_id
+        rd_out_id,
+        alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, rd_out_id_ex
     );
 
     EX Ex (
@@ -195,7 +198,7 @@ module pipeline();
         .read_data_out(read_data_out_wb),
         .alu_res_out(alu_res_out_wb),
         .rd_in_dm_wb(rd_out_ex_dm),
-        .rd_out_dm_wb(rd_out_ex_dm)
+        .rd_out_dm_wb(rd_out_dm_wb)
     );
 
     WriteBack WB(

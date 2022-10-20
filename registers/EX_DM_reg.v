@@ -23,5 +23,7 @@ always @(posedge clk)
         Write_data_out <= Write_data_in;
         mem_to_reg_out_ex_dm <= mem_to_reg_in;
         reg_write_out_ex_dm <= reg_write_in;
+        #1
+        $display("check address= %d",rd_out_ex_dm);
     end
 endmodule
