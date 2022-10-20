@@ -1,12 +1,14 @@
 module EX_DM_register (
-    ALU_result, Mem_read_in, Mem_write_in, Write_data_in, Mem_address, Mem_read_out, Mem_write_out, Write_data_out, clk, mem_to_reg_in, mem_to_reg_out_ex_dm, reset
+    ALU_result, mem_read_in, mem_write_in, Write_data_in, rd_in_ex_dm, Mem_address, mem_read_out_ex_dm, mem_write_out_ex_dm, Write_data_out, mem_to_reg_in, reg_write_in, mem_to_reg_out_ex_dm, reg_write_out_ex_dm, clk, reset, rd_out_ex_dm
 );
 input mem_to_reg_in, clk, reset;
-input wire Mem_read_in, Mem_write_in;
+input wire [4:0] rd_in_ex_dm;
+input wire mem_read_in, mem_write_in, reg_write_in;
 input wire [31:0] ALU_result, Write_data_in;
-output reg Mem_read_out, Mem_write_out;
+output reg mem_read_out_ex_dm, mem_write_out_ex_dm, reg_write_out_ex_dm;
 output reg [31:0] Mem_address, Write_data_out;
 output reg mem_to_reg_out_ex_dm;
+output reg [4:0] rd_out_ex_dm;
 reg flag_ex_dm;
 always @(posedge reset)
     begin
@@ -14,10 +16,12 @@ always @(posedge reset)
     end
 always @(posedge clk)
     begin
-        Mem_read_out <= Mem_read_in;
-        Mem_write_out <= Mem_write_in;
+        rd_out_ex_dm <= rd_in_ex_dm;
+        mem_read_out_ex_dm <= mem_read_in;
+        mem_write_out_ex_dm <= mem_write_in;
         Mem_address <= ALU_result;
         Write_data_out <= Write_data_in;
         mem_to_reg_out_ex_dm <= mem_to_reg_in;
+        reg_write_out_ex_dm <= reg_write_in;
     end
 endmodule

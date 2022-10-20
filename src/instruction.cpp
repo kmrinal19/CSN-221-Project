@@ -89,7 +89,6 @@ unsigned int IInstruction::parse()
 UJInstruction::UJInstruction(short opcode_type, std::vector<std::string> operands) : Instruction(opcode_type)
 {
 	// TODO: Handle errors for operands
-	short opcode = opcode_type;
 	if (operands.size() == 1)
 	{
 		address = LABEL_MAP[operands[0]];

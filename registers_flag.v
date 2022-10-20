@@ -1,9 +1,9 @@
-module registers_flag(clk, reset);
+module Registers_flag(clk, reset);
 
     input clk, reset;
 	reg registers_flag[0:31];
     always @(posedge reset)
-        begin         
+        begin
             registers_flag[0] <= 1'b0;
             registers_flag[1] <= 1'b0;
             registers_flag[2] <= 1'b0;

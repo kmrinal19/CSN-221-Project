@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`include "RegisterFile.v"
+`include "decode_unit/RegisterFile.v"
 
 module testb;
     reg [4:0] inst_read_reg_addr1 ,inst_read_reg_addr2 ,reg_wr_addr;
