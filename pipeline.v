@@ -90,7 +90,9 @@ module pipeline();
         .reset(reset),
         .inst_read_reg_addr1(inst_read_reg_addr1),
         .inst_read_reg_addr2(inst_read_reg_addr2),
-        .rd(rd),
+        .rd(rd), // Raw rd from instruction
+        // .rd(rd_out_wb),
+        .reg_wr_addr_wb(rd_out_wb), // Now, writing at address recieved from wb stage
         .reg_wr_data(reg_wr_data),
         .inst_imm_field(inst_imm_field),
         .reg_dst(reg_dst),
@@ -100,7 +102,8 @@ module pipeline();
         .imm_field_wo_sgn_ext(imm_field_wo_sgn_ext),
         .sgn_ext_imm(sgn_ext_imm),
         .imm_sgn_ext_lft_shft(imm_sgn_ext_lft_shft),
-        .rd_out_id(rd_out_id)
+        .rd_out_id(rd_out_id),
+        .reg_write_cu(reg_write)
     );
 
     ID_EX_reg ID_EX (
@@ -205,7 +208,8 @@ module pipeline();
         .dm_data_out(read_data_out_wb),
         .wb_data(reg_wr_data),
         .reg_write_out_wb(reg_write_out_wb),
-        .rd_out_wb(rd_out_dm_wb)
+        // .rd_out_wb(rd_out_dm_wb)
+        .rd_out_wb(rd_out_wb)
     );
 
     always@(clk)

@@ -34,7 +34,7 @@ always @ (pc)
     end
 always @ (pc)
     begin
-    if (nextpc==32'd56)
+    if (nextpc==32'd72)
         $finish;
     end
 
