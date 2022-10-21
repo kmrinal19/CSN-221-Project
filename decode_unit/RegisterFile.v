@@ -1,5 +1,5 @@
-module RegisterFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_wr_data, reg_wr, clk, reg_file_rd_data1, reg_file_rd_data2, reset);
-
+module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_wr_data, reg_wr, clk, reg_file_rd_data1, reg_file_rd_data2, reset);
+	input stall_flag;
 	input [4:0] inst_read_reg_addr1 ,inst_read_reg_addr2 ,reg_wr_addr;
 	input [31:0] reg_wr_data;
 	input reg_wr ,clk, reset;
@@ -45,15 +45,20 @@ module RegisterFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_w
 			registers[30] <= 32'd0; registers_flag[30] <= 32'd0;
 			registers[31] <= 32'd0; registers_flag[31] <= 32'd0;
 		end
-	always @(inst_read_reg_addr1, inst_read_reg_addr2, posedge clk)
+	always @(inst_read_reg_addr1, inst_read_reg_addr2, posedge clk, stall_flag)
+	if (stall_flag==0)
+	begin
 		begin
 			reg_file_rd_data1 <= registers[inst_read_reg_addr1];
 			reg_file_rd_data2 <= registers[inst_read_reg_addr2];
 		end
+	end
 
     // always@(reg_wr_data, reg_wr_addr) $display("reg_wr_data =%d, reg_wr_addr=%d",reg_wr_data, reg_wr_addr);
 
 	always @(negedge clk)
+	// if (stall_flag==0)
+	// begin
 	#8
 		begin
 			if (reg_wr == 1)
@@ -63,5 +68,6 @@ module RegisterFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_w
 					$display ("time=%3d, ans=%b addr=%b data=%b\n", $time, registers[reg_wr_addr], reg_wr_addr,reg_wr_data);
 				end
 		end
+	// end
 
 endmodule

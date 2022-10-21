@@ -1,6 +1,6 @@
-module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
-
-    input wire reset;        //To start from a known state - not necessary
+module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
+    input stall_flag;
+    input reset;        //To start from a known state - not necessary
     input clk;
     input wire [31:0] pc;
     input wire branch;
@@ -27,13 +27,16 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
     // pcout = pc;
 
     always @(ALUSrc or rt or sign_ext)
-    #1
-    begin
-    if(ALUSrc == 0)
-    data2 <= rt;
-    else
-    data2 <= sign_ext;  //assumed that 16-bit has been extended to 32-bit by ID unit
-    end
+        if (stall_flag==0)
+        begin
+            #1
+            begin
+            if(ALUSrc == 0)
+            data2 <= rt;
+            else
+            data2 <= sign_ext;  //assumed that 16-bit has been extended to 32-bit by ID unit
+            end
+        end
 
     //AluControl
 
@@ -49,6 +52,8 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
     assign funct = sign_ext[5:0];
 
     always @*
+    if (stall_flag==0)
+    begin
     #1
     begin
         pcout = pc;
@@ -91,6 +96,7 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
     endcase
 
     end
+    end
 
     //ALU
     // parameter ADD = 4'b0000;
@@ -98,7 +104,11 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
     // parameter SUB = 4'b0001;
     always @(posedge reset) zero <= 1'b0;
     always @(ALUControl or data1 or data2)
+    if (stall_flag==0)
+    begin
     #1
+    
+
     begin
 
     if(data1 == data2)
@@ -139,8 +149,11 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
         end
     // $display("hello");
     end
+    end
 
     always @(branch or zero)
+    if (stall_flag==0)
+    begin
     // #1
     begin
         if (branch==1 && zero==1)
@@ -151,12 +164,15 @@ module EX(clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address
             assign pcout = address;
         end
     end
+    end
 
-
-    always@(posedge clk)
+    always@(posedge clk or stall_flag)
+    if (stall_flag==0)
+    begin
 
         begin
         resultOut<=result;
         end
+    end
 
 endmodule

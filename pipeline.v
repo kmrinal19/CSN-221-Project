@@ -13,10 +13,10 @@
 
 
 module pipeline();
-    reg registers_flag[0:31];
+    wire flag_if, flag_id, flag_ex;
     reg clk, reset;
     wire mem_to_reg_out_ex_dm;
-    reg [31:0] registers[0:31];
+    // reg [31:0] registers[0:31];
     wire [31:0] pc;
     reg [31:0] Imemory [0:1023];
     wire [31:0] inp_instn;
@@ -37,6 +37,7 @@ module pipeline();
     wire [31:0] Read_Data, read_data_out_wb, alu_res_out_wb;
 
     Instruction_Memory IM (
+        .stall_flag(flag_if),
         .clk(clk),
         .pc(nextpc),
       	.reset(reset),
@@ -86,6 +87,12 @@ module pipeline();
     wire [1:0] alu_op_out;
 
     instruction_decoder tb (
+        .stall_flag(flag_id),
+        .stall_flag_if(flag_if),
+        .stall_flag_ex(flag_ex),
+        .stall_flag_id_out(flag_id),
+        .stall_flag_if_out(flag_if),
+        .stall_flag_ex_out(flag_ex),
         .clk (clk),
         .reset(reset),
         .inst_read_reg_addr1(inst_read_reg_addr1),
@@ -142,6 +149,7 @@ module pipeline();
     );
 
     EX Ex (
+        .stall_flag(flag_ex),
         .clk (clk),
         .reset (reset),
         .branch (branch_out_id_ex),
@@ -227,7 +235,12 @@ module pipeline();
     #500
     reset <= 0;
     end
-
+    // always@(posedge reset)
+    // begin
+    //     wire flag_if = 1'b0;
+    //     flag_id <= 1'b0;
+    //     flag_ex <= 1'b0;
+    // end
     // initial
     // begin
     //     clk = 1'b0;

@@ -6,6 +6,12 @@
 //`include "decode_unit/LeftShift2.v"
 
 module instruction_decoder (
+    stall_flag,
+    stall_flag_if,
+    stall_flag_ex,
+    stall_flag_id_out,
+    stall_flag_if_out,
+    stall_flag_ex_out,
     reg_write_cu,
     clk,
     reset,
@@ -30,6 +36,7 @@ module instruction_decoder (
     reg_wr_addr_wb
 );
     reg registers_flag[0:31];
+    
     always @(posedge reset)
         begin
             registers_flag[0] <= 1'b1;
@@ -64,8 +71,12 @@ module instruction_decoder (
             registers_flag[29] <= 1'b0;
             registers_flag[30] <= 1'b0;
             registers_flag[31] <= 1'b0;
+
+            stall_flag_ex_out <= 1'b0;
+            stall_flag_if_out <= 1'b0;
+            stall_flag_id_out <= 1'b0;
         end
-    input clk, reset, reg_write;
+    input clk, reset, reg_write, stall_flag, stall_flag_if, stall_flag_ex;
     input [4:0] inst_read_reg_addr1 ,inst_read_reg_addr2, rd, reg_wr_addr_wb; //rt removed
     // input [31:0] alu_data_out, mem_data_out; (Redundant, to be included in WB stage)
     input [15:0] inst_imm_field;
@@ -74,18 +85,31 @@ module instruction_decoder (
     output [31:0] reg_file_rd_data1, reg_file_rd_data2, sgn_ext_imm, imm_sgn_ext_lft_shft;
     output reg [15:0] imm_field_wo_sgn_ext;
     output reg [4:0] rd_out_id;
+    output reg stall_flag_if_out, stall_flag_ex_out, stall_flag_id_out;
     // computing multiplexer results
     wire [4:0] reg_wr_addr; // Changed reg to wire due to error in line 37
     // reg [4:0] reg_wr_addr; 
     // reg [31:0] reg_wr_data; (removed calculation of reg_wr_data)
-    Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, reg_dst, reg_wr_addr);
+
+    always @(posedge clk)
+        begin
+            if(registers_flag[inst_read_reg_addr1]==1 || registers_flag[inst_read_reg_addr2]==1)
+                begin
+                    stall_flag_if_out <= 1'b1;
+                    stall_flag_id_out <= 1'b1;
+                    stall_flag_ex_out <= 1'b1;
+                end
+        end
+
+    Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag, reg_dst, reg_wr_addr);
+    
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
     //#1
     // register file
-    RegisterFile registerFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr_wb, reg_wr_data, reg_write, clk, reg_file_rd_data1, reg_file_rd_data2, reset); // Replaced reg_wr_addr with reg_wr_addr_wb
+    RegisterFile registerFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr_wb, reg_wr_data, reg_write, clk, reg_file_rd_data1, reg_file_rd_data2, reset); // Replaced reg_wr_addr with reg_wr_addr_wb
 
     // sign extension
-    SignExtend signExtend(inst_imm_field, sgn_ext_imm);
+    SignExtend signExtend(stall_flag, inst_imm_field, sgn_ext_imm);
 
     // left shift
     //#1
@@ -97,9 +121,13 @@ module instruction_decoder (
 
     // assign imm_field_wo_sgn_ext = inst_imm_field; //Added below block in place
 
-    always @(inst_imm_field) begin
-        imm_field_wo_sgn_ext <= inst_imm_field;
-    end
+    always @(inst_imm_field or stall_flag) 
+    if (stall_flag==0)
+        begin    
+            begin
+                imm_field_wo_sgn_ext <= inst_imm_field;
+            end
+        end
     // always @(posedge clk)
     // begin
     //     rd_out_id <= reg_wr_addr;
@@ -133,12 +161,18 @@ module instruction_decoder (
         flag_reg_wr_addr <= reg_wr_addr;
         flag_reg_wr_addr_wb <= reg_wr_addr_wb;
         rd_out_id <= reg_wr_addr;
+        // stall_flag_if_out <= stall_flag_if;
+        // stall_flag_ex_out <= stall_flag_ex;
+        // stall_flag_id_out <= stall_flag,
         #1
         // $display("check address= %d",rd_out_id);
         if (reg_write_cu==1)
             registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set 
         if (reg_write==1)
             registers_flag[reg_wr_addr_wb] <= 1'b0;
+            stall_flag_if_out <= 1'b0;
+            stall_flag_id_out <= 1'b0;
+            stall_flag_ex_out <= 1'b0;
     end
 
 endmodule
