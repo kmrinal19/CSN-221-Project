@@ -24,6 +24,6 @@ always @(posedge clk)
         mem_to_reg_out_ex_dm <= mem_to_reg_in;
         reg_write_out_ex_dm <= reg_write_in;
         #1
-        $display("check address= %d",rd_in_ex_dm);
+        $display("time=%3d, check address= %d \n",$time,rd_in_ex_dm);
     end
 endmodule

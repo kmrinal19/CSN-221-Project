@@ -27,8 +27,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     // pcout = pc;
 
     always @(ALUSrc or rt or sign_ext)
+    begin
         if (stall_flag==0)
-        begin
+        
             #1
             begin
             if(ALUSrc == 0)
@@ -36,7 +37,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
             else
             data2 <= sign_ext;  //assumed that 16-bit has been extended to 32-bit by ID unit
             end
-        end
+    end
 
     //AluControl
 
@@ -52,8 +53,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     assign funct = sign_ext[5:0];
 
     always @*
-    if (stall_flag==0)
     begin
+    if (stall_flag==0)
+    
     #1
     begin
         pcout = pc;
@@ -104,8 +106,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     // parameter SUB = 4'b0001;
     always @(posedge reset) zero <= 1'b0;
     always @(ALUControl or data1 or data2)
-    if (stall_flag==0)
     begin
+    if (stall_flag==0)
+    
     #1
     
 
@@ -120,7 +123,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     4'b0000:
         begin
-        $display("data1=%d, data2=%d", data1, data2);
+        $display("data1=%d, data2=%d \n", data1, data2);
         result <= data1 + data2;
         end
 
@@ -152,8 +155,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     end
 
     always @(branch or zero)
-    if (stall_flag==0)
     begin
+    if (stall_flag==0)
+    
     // #1
     begin
         if (branch==1 && zero==1)
@@ -167,8 +171,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     end
 
     always@(posedge clk or stall_flag)
-    if (stall_flag==0)
     begin
+    if (stall_flag==0)
+    
 
         begin
         resultOut<=result;

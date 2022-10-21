@@ -46,8 +46,9 @@ module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr
 			registers[31] <= 32'd0; registers_flag[31] <= 32'd0;
 		end
 	always @(inst_read_reg_addr1, inst_read_reg_addr2, posedge clk, stall_flag)
-	if (stall_flag==0)
 	begin
+	if (stall_flag==0)
+	
 		begin
 			reg_file_rd_data1 <= registers[inst_read_reg_addr1];
 			reg_file_rd_data2 <= registers[inst_read_reg_addr2];
@@ -59,13 +60,14 @@ module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr
 	always @(negedge clk)
 	// if (stall_flag==0)
 	// begin
-	#8
+	// #8
+	#1
 		begin
 			if (reg_wr == 1)
 				begin
 					registers[reg_wr_addr] = reg_wr_data;
 					#1
-					$display ("time=%3d, ans=%b addr=%b data=%b\n", $time, registers[reg_wr_addr], reg_wr_addr,reg_wr_data);
+					$display ("time=%3d, ans=%b addr=%b data=%b \n", $time, registers[reg_wr_addr], reg_wr_addr,reg_wr_data);
 				end
 		end
 	// end

@@ -39,7 +39,7 @@ module instruction_decoder (
     
     always @(posedge reset)
         begin
-            registers_flag[0] <= 1'b1;
+            registers_flag[0] <= 1'b0;
             registers_flag[1] <= 1'b0;
             registers_flag[2] <= 1'b0;
             registers_flag[3] <= 1'b0;
@@ -156,7 +156,8 @@ module instruction_decoder (
     reg [4:0] flag_reg_wr_addr;
     reg [4:0] flag_reg_wr_addr_wb;
     always @(negedge clk or reg_wr_addr)
-    #10
+    // #10
+    #1
     begin
         flag_reg_wr_addr <= reg_wr_addr;
         flag_reg_wr_addr_wb <= reg_wr_addr_wb;

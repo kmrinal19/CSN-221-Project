@@ -224,12 +224,13 @@ module pipeline();
     );
 
     always@(clk)
+    // #10 clk <= ~clk;
     #10 clk <= ~clk;
 
 
     initial
     begin
-    $monitor("time=%3d, reg_wr_data=%d", $time, reg_wr_data);
+    $monitor("time=%3d, reg_wr_data=%d \n", $time, reg_wr_data);
     clk <= 0;
     reset <= 1;
     #500

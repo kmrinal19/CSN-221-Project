@@ -30,6 +30,7 @@ always @ (pc or stall_flag)
     begin
         begin
             #20  //enabling this leads to $readmemb: Unable to open Icode.txt for reading.
+            // #1
             $display ("time=%3d, inp_instn=%b, nextpc=%b, pc_to _branch=%b \n", $time, inp_instn, nextpc, pc_to_branch);
             inp_instn  = Imemory[pc/4];  //Was given to be [pc>>2]
             pc_to_branch = pc;
@@ -39,7 +40,7 @@ always @ (pc or stall_flag)
     end
 always @ (pc)
     begin
-    if (nextpc==32'd36)
+    if (nextpc==32'd28)
         $finish;
     end
 
