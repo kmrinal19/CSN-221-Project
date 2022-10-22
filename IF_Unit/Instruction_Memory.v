@@ -40,7 +40,7 @@ always @ (pc or stall_flag)
     end
 always @ (pc)
     begin
-    if (nextpc==32'd28)
+    if (nextpc==32'd40)
         $finish;
     end
 

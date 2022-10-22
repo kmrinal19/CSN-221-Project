@@ -4,7 +4,7 @@ module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr
 	input [31:0] reg_wr_data;
 	input reg_wr ,clk, reset;
 	output reg [31:0] reg_file_rd_data1 ,reg_file_rd_data2;
-
+	integer i;
 	reg [31:0] registers[0:31]; // Need to understand implementation of 32 32-bit registers
 	//TODO: Reading at posedge makes the program inefficient
 
@@ -71,5 +71,10 @@ module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr
 				end
 		end
 	// end
+	always@(posedge clk)
+	begin
+		for(i=0; i<32; i=i+1)
+			$display("Register ", i , " ", registers[i]);
+	end
 
 endmodule

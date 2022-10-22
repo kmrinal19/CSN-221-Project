@@ -167,14 +167,14 @@ module pipeline();
     );
 
     EX_DM_register EX_DM (
-        .ALU_result (resultOut),
+        // .ALU_result (resultOut),
         .mem_to_reg_in(mem_to_reg_out_id_ex),
         .mem_to_reg_out_ex_dm(mem_to_reg_out_ex_dm),
         .mem_read_in (mem_read_out_id_ex),
         .mem_write_in(mem_write_out_id_ex),
         .reg_write_in(reg_write_out_id_ex),
         .Write_data_in(reg_file_out_data2),
-        .Mem_address(Mem_address),
+        // .Mem_address(Mem_address),
         .mem_read_out_ex_dm(mem_read_out_ex_dm),
         .mem_write_out_ex_dm(mem_write_out_ex_dm),
         .reg_write_out_ex_dm(reg_write_out_ex_dm),
@@ -197,7 +197,7 @@ module pipeline();
 
     MEM_WB_reg DM_WB (
         .clk(clk),
-        .alu_result(Mem_address),
+        .alu_result(resultOut),
         .read_data(Read_Data),
         .reg_write(reg_write_out_ex_dm),
         .mem_to_reg(mem_to_reg_out_ex_dm),

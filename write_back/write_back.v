@@ -17,4 +17,7 @@ always @(posedge clk)
         else
             wb_data <= alu_data_out;
     end
+
+always@(posedge clk)
+    $display("Writeback ", rd_out_wb, " ", wb_data);
 endmodule

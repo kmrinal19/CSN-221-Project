@@ -44,4 +44,6 @@ module ID_EX_reg (branch, reg_write, mem_to_reg, mem_write, mem_read, rd_in_id_e
       // reg_dst_out <= reg_dst;
     end
 
+always@(posedge clk)
+  $display("ID_EX", rd_out_id_ex);
 endmodule

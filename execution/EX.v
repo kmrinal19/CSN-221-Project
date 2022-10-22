@@ -180,4 +180,6 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
         end
     end
 
+    always@(posedge clk)
+        $display("EX", resultOut);
 endmodule

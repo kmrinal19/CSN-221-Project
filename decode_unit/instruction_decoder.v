@@ -103,6 +103,8 @@ module instruction_decoder (
 
     Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag, reg_dst, reg_wr_addr);
     
+    always @(posedge clk)
+        $display("ID", reg_wr_addr);
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
     //#1
     // register file

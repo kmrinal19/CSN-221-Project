@@ -26,5 +26,7 @@ module MEM_WB_reg(mem_to_reg, reg_write, rd_in_dm_wb, alu_result, clk, read_data
 
     end
 
+always@(posedge clk)
+  $display("DM_WB", alu_res_out, " ", rd_out_dm_wb);
 
 endmodule
