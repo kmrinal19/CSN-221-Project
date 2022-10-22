@@ -28,17 +28,17 @@ zero <= 1'b0;
 
 case(ALUControl)
 
-ADD: 
-	begin	
+ADD:
+	begin
 	result <= data1 + data2;
 	end
-	
+
 
 SUB:
 	begin
 	result <= data1 - data2;
 	end
-	
+
 MUL:
 	begin
 	result <= data1 * data2;

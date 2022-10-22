@@ -1,10 +1,10 @@
 CXX := g++
-CXXFLAGS := -g -Wall
+CXXFLAGS := -std=c++11 -g -Wall
 SRCDIR := src
 BUILDDIR := build
 TARGET := bin/parser
 
-OBJECTS = $(BUILDDIR)/instruction.o $(BUILDDIR)/parser.o $(BUILDDIR)/parser.o
+OBJECTS = $(BUILDDIR)/instruction.o $(BUILDDIR)/parser.o $(BUILDDIR)/utils.o
 
 $(TARGET): $(OBJECTS)
 	$(CXX) -o $(TARGET) $(OBJECTS)
@@ -20,5 +20,5 @@ $(BUILDDIR)/utils.o: $(SRCDIR)/utils.cpp $(SRCDIR)/instruction.h $(SRCDIR)/utils
 
 .PHONY : clean
 clean :
-	rm edit $(OBJECTS)
+	rm $(OBJECTS)
 

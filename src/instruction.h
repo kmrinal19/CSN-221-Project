@@ -29,6 +29,8 @@ const std::unordered_map<std::string, unsigned short> FUNCTION_MAP = {
     {"MUL", MUL},
 };
 
+extern std::unordered_map<std::string, unsigned int> LABEL_MAP;
+
 class Instruction {
     public:
         Instruction(unsigned short instruction_opcode);

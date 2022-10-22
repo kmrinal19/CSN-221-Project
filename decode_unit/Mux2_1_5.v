@@ -1,9 +1,15 @@
-module Mux2_1_5(inp1, inp2, cs, out);
+module Mux2_1_5(inp1, inp2, stall_flag, cs, out);
 
+input stall_flag;
 input [4:0] inp1, inp2;
 input cs;
-output [4:0] out;
+output reg [4:0] out;
 
-assign out = (cs == 1'b0) ? inp1: (cs == 1'b1)? inp2: 5'bx; // To understand: 5'bx
-
+always @(inp1 or inp2 or cs or stall_flag)
+if (stall_flag==0)
+begin
+begin
+    out = (cs == 1'b0) ? inp1: (cs == 1'b1)? inp2: 5'bx; // To understand: 5'bx
+end
+end
 endmodule

@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`include "execution/EX.v"
+`include "EX.v"
 module testb;
     reg clk;
     reg reset;
@@ -15,8 +15,9 @@ module testb;
     wire zero;
     wire [31:0] resultOut;
     wire [31:0] pcout;
+    wire [31:0] offset;
 
-    main tb (
+    EX tb (
         .clk (clk),
         .reset (reset),
         .rs (rs),
@@ -30,7 +31,8 @@ module testb;
         .zero (zero),
         .resultOut(resultOut),
         .pcout (pcout),
-      	.branch (branch)
+      	.branch (branch),
+        .offset (offset)
     );
 
     initial 
@@ -47,8 +49,6 @@ module testb;
 
     initial 
     begin
-        
-        
         #20
         rs = 5;
         rt = 5;
@@ -56,11 +56,13 @@ module testb;
         sign_ext = 5;
         ALUSrc = 1'b1;
         funct = 6'b000010;
-        ALUOp = 2'b10;
+        ALUOp = 2'b01;
       	branch = 1'b1;
         #40
-        $display ("time=%3d, address=%b, zero=%b, result=%d, pcout=%b \n", $time, address, zero, resultOut, pcout);
+        $display ("time=%3d, address=%b, zero=%b, result=%d, pcout=%b, offset%b \n", $time, address, zero, resultOut, pcout, offset);
       	$finish;
+
+        
 
     end
 
