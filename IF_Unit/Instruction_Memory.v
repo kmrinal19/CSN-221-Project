@@ -11,36 +11,42 @@ output reg [31:0] nextpc;
 output reg [31:0] pc_to_branch;
 
 initial //for testing
+    // #3
     begin
         $readmemb("Icode.txt", Imemory);
     end
 
 always @ (posedge reset)
+    // #3
     begin
 
         inp_instn  <= Imemory[0];
         nextpc <= 32'd4;
         pc_to_branch <= 32'd0;
-        #1
+        // #1
         $display ("time=%3d, inp_instn=%b, nextpc=%b, pc_to _branch=%b \n", $time, inp_instn, nextpc, pc_to_branch);
 
     end
-always @ (pc or stall_flag)
-    if (stall_flag==0)
+always @ (posedge clk)
+#20
     begin
+    if (stall_flag==0)    
         begin
-            #20  //enabling this leads to $readmemb: Unable to open Icode.txt for reading.
+            
+            inp_instn  = Imemory[pc/4];  //Was given to be [pc>>2]
+            pc_to_branch <= pc;
+            nextpc <= pc+32'd4;
+              //enabling this leads to $readmemb: Unable to open Icode.txt for reading.
             // #1
             $display ("time=%3d, inp_instn=%b, nextpc=%b, pc_to _branch=%b \n", $time, inp_instn, nextpc, pc_to_branch);
-            inp_instn  = Imemory[pc/4];  //Was given to be [pc>>2]
-            pc_to_branch = pc;
-            nextpc <= pc+32'd4;             // pc value is not being updated, so the pc in next cycle will be the nextpc outpur received in this cycle
+            // pc value is not being updated, so the pc in next cycle will be the nextpc outpur received in this cycle
             
         end
     end
-always @ (pc)
+always @ (pc or clk)
+    
     begin
-    if (nextpc==32'd28)
+    if (nextpc==32'd40)
         $finish;
     end
 

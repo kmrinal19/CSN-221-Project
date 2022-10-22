@@ -25,13 +25,15 @@ module ID_EX_reg (branch, reg_write, mem_to_reg, mem_write, mem_read, rd_in_id_e
       flag_id_ex = 1'b1;
     end
   always @(posedge clk)
+    
     begin
+    // #3
       nextpc_out <= nextpc;
       branch_out_id_ex <= branch;
       reg_file_out_data1 <= reg_file_rd_data1;
       reg_file_out_data2 <= reg_file_rd_data2;
       sgn_ext_imm_out <= sgn_ext_imm;
-      rd_out_id_ex <= rd_in_id_ex;
+      
       // rs_out <= inst_imm_field[9:5];
       // rt_out <= inst_imm_field[14:10];
       // reg_write_out <= reg_write;
@@ -42,6 +44,8 @@ module ID_EX_reg (branch, reg_write, mem_to_reg, mem_write, mem_read, rd_in_id_e
       alu_src_out_id_ex <= alu_src;
       alu_op_out_id_ex <= alu_op;
       // reg_dst_out <= reg_dst;
+      // #2
+      rd_out_id_ex <= rd_in_id_ex;
     end
 
 endmodule

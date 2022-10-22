@@ -1,0 +1,65 @@
+#! /c/iverilog/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_00C538F0 .scope module, "EX_DM_register" "EX_DM_register" 2 1;
+ .timescale 0 0;
+v00C53EB8_0 .net "ALU_result", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00DC2AD8_0 .var "Mem_address", 31 0;
+v00DC2B30_0 .net "Write_data_in", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00DC2B88_0 .var "Write_data_out", 31 0;
+v00DCEC18_0 .net "clk", 0 0, C4<z>; 0 drivers
+v00DCEC70_0 .var "flag_ex_dm", 0 0;
+v00DCECC8_0 .net "mem_read_in", 0 0, C4<z>; 0 drivers
+v00DCED20_0 .var "mem_read_out_ex_dm", 0 0;
+v00DCED78_0 .net "mem_to_reg_in", 0 0, C4<z>; 0 drivers
+v00DCEDD0_0 .var "mem_to_reg_out_ex_dm", 0 0;
+v00DCEE28_0 .net "mem_write_in", 0 0, C4<z>; 0 drivers
+v00DCEE80_0 .var "mem_write_out_ex_dm", 0 0;
+v00DCEED8_0 .net "rd_in_ex_dm", 4 0, C4<zzzzz>; 0 drivers
+v00DCEF30_0 .var "rd_out_ex_dm", 4 0;
+v00DCEF88_0 .net "reg_write_in", 0 0, C4<z>; 0 drivers
+v00C70F48_0 .var "reg_write_out_ex_dm", 0 0;
+v00C70FA0_0 .net "reset", 0 0, C4<z>; 0 drivers
+E_00DC75C8 .event posedge, v00DCEC18_0;
+E_00DC75E8 .event posedge, v00C70FA0_0;
+    .scope S_00C538F0;
+T_0 ;
+    %wait E_00DC75E8;
+    %set/v v00DCEC70_0, 1, 1;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_00C538F0;
+T_1 ;
+    %wait E_00DC75C8;
+    %load/v 8, v00DCECC8_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v00DCED20_0, 0, 8;
+    %load/v 8, v00DCEE28_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v00DCEE80_0, 0, 8;
+    %load/v 8, v00C53EB8_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00DC2AD8_0, 0, 8;
+    %load/v 8, v00DC2B30_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00DC2B88_0, 0, 8;
+    %load/v 8, v00DCED78_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v00DCEDD0_0, 0, 8;
+    %load/v 8, v00DCEF88_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v00C70F48_0, 0, 8;
+    %delay 10, 0;
+    %load/v 8, v00DCEED8_0, 5;
+    %ix/load 0, 5, 0;
+    %assign/v0 v00DCEF30_0, 0, 8;
+    %jmp T_1;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "EX_DM_reg.v";

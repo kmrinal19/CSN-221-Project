@@ -25,6 +25,7 @@ module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,a
 
   always@(opcode)
     begin
+    
       case (opcode)
 
         RType:           

@@ -25,7 +25,7 @@ module testb;
         .sign_ext (sign_ext),
         .ALUSrc (ALUSrc),
         .ALUOp (ALUOp),
-        .funct (funct),
+        // .funct (funct),
         .pc (pc),
         .address(address),
         .zero (zero),
@@ -49,21 +49,18 @@ module testb;
 
     initial 
     begin
-        #20
-        rs = 5;
-        rt = 5;
-        pc = 4;
-        sign_ext = 5;
-        ALUSrc = 1'b1;
-        funct = 6'b000010;
-        ALUOp = 2'b01;
-      	branch = 1'b1;
-        #40
+        // #1
+        rs <= 5;
+        rt <= 5;
+        pc <= 4;
+        sign_ext <= 5;
+        ALUSrc <= 1'b1;
+        funct <= 6'b000010;
+        ALUOp <= 2'b10;
+      	branch <= 1'b0;
+        #10
         $display ("time=%3d, address=%b, zero=%b, result=%d, pcout=%b, offset%b \n", $time, address, zero, resultOut, pcout, offset);
       	$finish;
-
-        
-
     end
 
 endmodule

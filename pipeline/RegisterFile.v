@@ -50,7 +50,7 @@ module RegisterFile(inst_read_reg_addr1, inst_read_reg_addr2, reg_wr_addr, reg_w
 		end
 
 	always @(negedge clk)
-	#8
+	#2
 		begin
 			if (reg_wr == 1)
 				begin

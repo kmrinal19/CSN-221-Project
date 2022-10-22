@@ -22,15 +22,16 @@ always @(posedge reset)
 
 always @(Mem_read) 
 //   #10
-    #1
+    // #4
     begin
+    // #2
         if(Mem_read==1)
             Read_Data <= memory[Mem_address];
     end
 
 always @(negedge clk)
 //   #10
-    #1
+    // #4
     begin
         if(Mem_write==1)
             memory[Mem_address] <= Write_data;

@@ -9,12 +9,19 @@ output reg reg_write_out_wb;
 output reg [4:0] rd_out_wb;
 
 always @(posedge clk)
+// #2
     begin
-        rd_out_wb <= rd_in_wb;
-        reg_write_out_wb <= reg_write;
-        if (mem_to_reg==1)
-            wb_data <= dm_data_out;
+        rd_out_wb = rd_in_wb;
+        reg_write_out_wb = reg_write;
+        // #1
+        if (mem_to_reg==0)
+            wb_data = alu_data_out;
+            
+            
         else
-            wb_data <= alu_data_out;
+            wb_data = dm_data_out;
+        
+        $display("data ", wb_data, "address ", rd_out_wb);
+        // rd_out_wb = rd_in_wb;
     end
 endmodule

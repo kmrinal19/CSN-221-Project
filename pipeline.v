@@ -52,7 +52,7 @@ module pipeline();
         .currpc(pc_to_branch),
         .inp_instn(inp_instn),
         .nextpc(nextpc),
-        .PCplus4Out(PCplus4Out),
+        .PCplus4Out(nextpc_out),
         .currpc_out(currpc_out),
         .out_instn(out_instn)
     );
@@ -62,7 +62,7 @@ module pipeline();
     assign rd = inp_instn[15:11];
     assign inst_imm_field = inp_instn[15:0];
     // assign funct = inp_instn[5:0];
-
+    
     ControlUnit cu (
         .opcode(opcode),
         .reset(reset),
@@ -163,9 +163,11 @@ module pipeline();
         .address(branch_address),
         .zero (zero),
         .resultOut(resultOut),
-        .pcout (pcout) // redundant
+        .pcout (pcout), // redundant
+        .address_in(rd_out_id_ex),
+        .address_out(rd_out_id_ex)
     );
-
+    
     EX_DM_register EX_DM (
         .ALU_result (resultOut),
         .mem_to_reg_in(mem_to_reg_out_id_ex),

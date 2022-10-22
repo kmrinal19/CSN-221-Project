@@ -1,0 +1,55 @@
+#! /c/iverilog/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_00DE8EF8 .scope module, "MEM_WB_reg" "MEM_WB_reg" 2 1;
+ .timescale 0 0;
+v00DE7F50_0 .var "alu_res_out", 31 0;
+v00DE7FA8_0 .net "alu_result", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00DE2AD8_0 .net "clk", 0 0, C4<z>; 0 drivers
+v00DE2B30_0 .var "flag_dm_wb", 0 0;
+v00DE2B88_0 .net "mem_to_reg", 0 0, C4<z>; 0 drivers
+v00DEE480_0 .var "mem_to_reg_out_dm_wb", 0 0;
+v00DEE4D8_0 .net "rd_in_dm_wb", 4 0, C4<zzzzz>; 0 drivers
+v00DEE530_0 .var "rd_out_dm_wb", 4 0;
+v00DEE588_0 .net "read_data", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00DEE5E0_0 .var "read_data_out", 31 0;
+v00DEE638_0 .net "reg_write", 0 0, C4<z>; 0 drivers
+v00DEE690_0 .var "reg_write_out_dm_wb", 0 0;
+v00DEE6E8_0 .net "reset", 0 0, C4<z>; 0 drivers
+E_00DE8470 .event posedge, v00DE2AD8_0;
+E_00DE8750 .event posedge, v00DEE6E8_0;
+    .scope S_00DE8EF8;
+T_0 ;
+    %wait E_00DE8750;
+    %set/v v00DE2B30_0, 1, 1;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_00DE8EF8;
+T_1 ;
+    %wait E_00DE8470;
+    %delay 8, 0;
+    %load/v 8, v00DE2B88_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v00DEE480_0, 0, 8;
+    %load/v 8, v00DEE638_0, 1;
+    %ix/load 0, 1, 0;
+    %assign/v0 v00DEE690_0, 0, 8;
+    %load/v 8, v00DEE588_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00DEE5E0_0, 0, 8;
+    %load/v 8, v00DE7FA8_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00DE7F50_0, 0, 8;
+    %load/v 8, v00DEE4D8_0, 5;
+    %ix/load 0, 5, 0;
+    %assign/v0 v00DEE530_0, 0, 8;
+    %jmp T_1;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "DM_WB_reg.v";

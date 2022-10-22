@@ -1,0 +1,44 @@
+#! /c/iverilog/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_00C52B60 .scope module, "IF_ID_reg" "IF_ID_reg" 2 1;
+ .timescale 0 0;
+v00C57968_0 .var "PCplus4Out", 31 0;
+v00C5EA10_0 .net "clk", 0 0, C4<z>; 0 drivers
+v00C5EA68_0 .net "currpc", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00C5EAC0_0 .var "currpc_out", 31 0;
+v00C5EB18_0 .var "flag_if_id", 0 0;
+v00C5EB70_0 .net "inp_instn", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00C5EBC8_0 .net "nextpc", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00C5EC20_0 .var "out_instn", 31 0;
+v00C5EC78_0 .net "reset", 0 0, C4<z>; 0 drivers
+E_00C577D0 .event posedge, v00C5EA10_0;
+E_00C57870 .event posedge, v00C5EC78_0;
+    .scope S_00C52B60;
+T_0 ;
+    %wait E_00C57870;
+    %set/v v00C5EB18_0, 0, 1;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_00C52B60;
+T_1 ;
+    %wait E_00C577D0;
+    %load/v 8, v00C5EB70_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00C5EC20_0, 0, 8;
+    %load/v 8, v00C5EBC8_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00C57968_0, 0, 8;
+    %load/v 8, v00C5EA68_0, 32;
+    %ix/load 0, 32, 0;
+    %assign/v0 v00C5EAC0_0, 0, 8;
+    %jmp T_1;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "IF_ID_reg.v";

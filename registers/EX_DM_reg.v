@@ -15,15 +15,20 @@ always @(posedge reset)
       flag_ex_dm = 1'b1;
     end
 always @(posedge clk)
+    
     begin
-        rd_out_ex_dm <= rd_in_ex_dm;
+    // #2
+        
         mem_read_out_ex_dm <= mem_read_in;
         mem_write_out_ex_dm <= mem_write_in;
         Mem_address <= ALU_result;
         Write_data_out <= Write_data_in;
         mem_to_reg_out_ex_dm <= mem_to_reg_in;
         reg_write_out_ex_dm <= reg_write_in;
-        #1
-        $display("time=%3d, check address= %d \n",$time,rd_in_ex_dm);
+        // #10
+        rd_out_ex_dm <= rd_in_ex_dm;
+        // #1
+        // $display("time=%3d, check address= %d, check data= \n",$time,rd_in_ex_dm,Al);
+        // $display("data ", wb_data, "address ", rd_out_wb);
     end
 endmodule

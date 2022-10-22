@@ -15,13 +15,16 @@ module MEM_WB_reg(mem_to_reg, reg_write, rd_in_dm_wb, alu_result, clk, read_data
       flag_dm_wb = 1'b1;
     end
   always@(posedge clk)
+  
     begin
       // reg_write_out<=reg_write;
-      rd_out_dm_wb <= rd_in_dm_wb;
       mem_to_reg_out_dm_wb <= mem_to_reg;
       reg_write_out_dm_wb <= reg_write;
       read_data_out <= read_data;
       alu_res_out <= alu_result;
+      // #2
+      rd_out_dm_wb <= rd_in_dm_wb;
+
       // write_reg_out<=write_reg;
 
     end

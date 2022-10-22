@@ -1,4 +1,4 @@
-module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
+module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset, address_in, address_out);
     input stall_flag;
     input reset;        //To start from a known state - not necessary
     input clk;
@@ -9,6 +9,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     input wire [31:0] sign_ext;
     input wire ALUSrc;          //to choose bw rt and sign extend ,from cu
     input wire [1:0] ALUOp;     //from cu
+    input wire [4:0] address_in;
     wire [5:0] funct;     //from decode unit
     reg [3:0] ALUControl;
     reg [31:0] result;
@@ -16,6 +17,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     output reg [31:0] address;
     output reg [31:0] resultOut;
     output reg [31:0] pcout;
+    output reg [4:0] address_out;
     // output reg [3:0] ALUControlOut;
 
     // wire [3:0] ALUControl;
@@ -27,10 +29,12 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     // pcout = pc;
 
     always @(ALUSrc or rt or sign_ext)
+    // #1
     begin
+    // #4
         if (stall_flag==0)
         
-            #1
+            // #1
             begin
             if(ALUSrc == 0)
             data2 <= rt;
@@ -56,7 +60,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     begin
     if (stall_flag==0)
     
-    #1
+    // #1
     begin
         pcout = pc;
     case(ALUOp)
@@ -109,7 +113,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     begin
     if (stall_flag==0)
     
-    #1
+    // #2
     
 
     begin
@@ -141,31 +145,31 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     endcase
 
-    if (branch==1 && zero==1)
-        begin
-            $display("hello");
-            offset = sign_ext<<2;
-            // #1
-            // address = offset + pc;
-            // #1
-            // pcout = address;
-        end
+    // if (branch==1 && zero==1)
+    //     begin
+    //         $display("hello");
+    //         offset = sign_ext<<2;
+    //         // #1
+    //         // address = offset + pc;
+    //         // #1
+    //         // pcout = address;
+    //     end
     // $display("hello");
     end
     end
 
-    always @(branch or zero)
+    always @(branch or zero or stall_flag or sign_ext)
     begin
     if (stall_flag==0)
     
-    // #1
+    // #4
     begin
         if (branch==1 && zero==1)
         begin
             $display("hello");
             offset = sign_ext<<2;
             address = offset + pc;
-            assign pcout = address;
+            pcout = address;
         end
     end
     end
@@ -177,6 +181,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
         begin
         resultOut<=result;
+        address_out<=address_in;
+        $display (resultOut);
+        // $display("data ", wb_data, "address ", rd_out_wb);
         end
     end
 

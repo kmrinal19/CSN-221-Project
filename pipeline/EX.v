@@ -27,7 +27,7 @@ reg [31:0] data2;
 // pcout = pc;
 
 always @(ALUSrc)
-#1
+// #2
 begin
 if(ALUSrc == 0)
 data2 <= rt;
@@ -47,7 +47,7 @@ parameter SUB = 6'b000001;
 parameter MUL = 6'b000010;
 
 always @* 
-#1
+// #1
 begin
     pcout = pc;
 case(ALUOp)
@@ -96,7 +96,7 @@ end
 // parameter SUB = 4'b0001;
 always @(posedge reset) zero <= 1'b0;
 always @(ALUControl or data1 or data2)
-#1
+// #1
 begin
 
 if(data1 == data2)

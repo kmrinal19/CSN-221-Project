@@ -157,16 +157,18 @@ module instruction_decoder (
     reg [4:0] flag_reg_wr_addr_wb;
     always @(negedge clk or reg_wr_addr)
     // #10
-    #1
+    // #1
     begin
         flag_reg_wr_addr <= reg_wr_addr;
         flag_reg_wr_addr_wb <= reg_wr_addr_wb;
         rd_out_id <= reg_wr_addr;
+        $display("12345678912345678912345678900000000000000000000");
+        $display("HI",rd_out_id);
         // stall_flag_if_out <= stall_flag_if;
         // stall_flag_ex_out <= stall_flag_ex;
         // stall_flag_id_out <= stall_flag,
-        #1
-        // $display("check address= %d",rd_out_id);
+        // #1
+      // $display("check address= %d",rd_out_id);
         if (reg_write_cu==1)
             registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set 
         if (reg_write==1)

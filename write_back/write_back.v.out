@@ -1,0 +1,45 @@
+#! /c/iverilog/bin/vvp
+:ivl_version "0.9.7 " "(v0_9_7)";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_00CB2AD8 .scope module, "WriteBack" "WriteBack" 2 2;
+ .timescale 0 0;
+v00CB3E98_0 .net "alu_data_out", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00CB8298_0 .net "clk", 0 0, C4<z>; 0 drivers
+v00CB2B60_0 .net "dm_data_out", 31 0, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; 0 drivers
+v00CB2BB8_0 .net "mem_to_reg", 0 0, C4<z>; 0 drivers
+v00CBE460_0 .net "rd_in_wb", 4 0, C4<zzzzz>; 0 drivers
+v00CBE4B8_0 .var "rd_out_wb", 4 0;
+v00CBE510_0 .net "reg_write", 0 0, C4<z>; 0 drivers
+v00CBE568_0 .var "reg_write_out_wb", 0 0;
+v00CBE5C0_0 .net "reset", 0 0, C4<z>; 0 drivers
+v00CBE618_0 .var "wb_data", 31 0;
+E_00CB3A50 .event posedge, v00CB8298_0;
+    .scope S_00CB2AD8;
+T_0 ;
+    %wait E_00CB3A50;
+    %load/v 8, v00CBE460_0, 5;
+    %set/v v00CBE4B8_0, 8, 5;
+    %load/v 8, v00CBE510_0, 1;
+    %set/v v00CBE568_0, 8, 1;
+    %load/v 8, v00CB2BB8_0, 1;
+    %mov 9, 0, 1;
+    %cmpi/u 8, 0, 2;
+    %jmp/0xz  T_0.0, 4;
+    %load/v 8, v00CB3E98_0, 32;
+    %set/v v00CBE618_0, 8, 32;
+    %jmp T_0.1;
+T_0.0 ;
+    %load/v 8, v00CB2B60_0, 32;
+    %set/v v00CBE618_0, 8, 32;
+T_0.1 ;
+    %vpi_call 2 24 "$display", "data ", v00CBE618_0, "address ", v00CBE4B8_0;
+    %jmp T_0;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "write_back.v";

@@ -163,14 +163,14 @@ module pipeline();
     );
     
     always@(clk)
-    #10 clk <= ~clk;
+    #1 clk <= ~clk;
 
     initial
     begin
 
     clk <= 0;
     reset <= 1;
-    #500
+    #50
     reset <= 0;
 
     end
