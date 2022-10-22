@@ -59,19 +59,19 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     #1
     begin
         pcout = pc;
-    case(ALUOp)
+    case(ALUOp) //aluop same for lw and sw and addi... first it is going to load before addi
 
         LW: //address always in rs and data in rt
         begin
             ALUControl = 4'b0000;
-            offset = sign_ext<<2; //check if shift is necessary
+            offset = sign_ext; //check if shift is necessary
             data2 = offset;
         end
 
         SW:
         begin
             ALUControl = 4'b0000;
-            offset = sign_ext<<2; //check if shift is necessary
+            offset = sign_ext; //check if shift is necessary
             data2 = offset;
         end
         ADDI:

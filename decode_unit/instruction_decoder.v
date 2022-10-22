@@ -94,11 +94,13 @@ module instruction_decoder (
     always @(posedge clk)
         begin
             if(registers_flag[inst_read_reg_addr1]==1 || registers_flag[inst_read_reg_addr2]==1)
-                begin
+            begin
                     stall_flag_if_out <= 1'b1;
                     stall_flag_id_out <= 1'b1;
                     stall_flag_ex_out <= 1'b1;
-                end
+            end
+            $display("TESTINGGGGGGGGGGGGGGGG");
+            $display(stall_flag_if_out, " ", stall_flag_id_out, " ", stall_flag_ex_out);
         end
 
     Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag, reg_dst, reg_wr_addr);
@@ -172,10 +174,12 @@ module instruction_decoder (
         if (reg_write_cu==1)
             registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set 
         if (reg_write==1)
+        begin
             registers_flag[reg_wr_addr_wb] <= 1'b0;
             stall_flag_if_out <= 1'b0;
             stall_flag_id_out <= 1'b0;
             stall_flag_ex_out <= 1'b0;
+        end
     end
 
 endmodule
