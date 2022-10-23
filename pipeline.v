@@ -9,6 +9,7 @@
 `include "registers/DM_WB_reg.v"
 `include "decode_unit/controlunit.v"
 `include "decode_unit/instruction_decoder.v"
+`include "RegisterFile.v"
 // `include "decode_unit/RegisterFile.v"
 
 

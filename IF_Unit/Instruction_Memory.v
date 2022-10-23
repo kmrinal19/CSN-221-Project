@@ -14,7 +14,7 @@ output reg stall_flag_out;
 
 initial //for testing
     begin
-        $readmemb("Icode.txt", Imemory);
+        $readmemb("m.bin", Imemory);
         // stall_flag = 1'b0;
         // confirm = 1'b1;
     end
