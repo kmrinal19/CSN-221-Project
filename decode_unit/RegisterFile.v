@@ -66,6 +66,7 @@ module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr
 			if (reg_wr == 1)
 				begin
 					registers[reg_wr_addr] = reg_wr_data;
+					registers_flag[reg_wr_addr] = 1'b0;
 					#1
 					$display ("time=%3d, ans=%b addr=%b data=%b \n", $time, registers[reg_wr_addr], reg_wr_addr,reg_wr_data);
 				end

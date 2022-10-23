@@ -13,7 +13,8 @@
 
 
 module pipeline();
-    wire flag_if, flag_id, flag_ex;
+    reg flag_id_in;
+    wire flag_id;
     reg clk, reset;
     wire mem_to_reg_out_ex_dm;
     // reg [31:0] registers[0:31];
@@ -36,15 +37,23 @@ module pipeline();
     wire Mem_read, Mem_write, mem_to_reg_out_dm_wb;
     wire [31:0] Read_Data, read_data_out_wb, alu_res_out_wb;
 
+    // initial
+    // begin
+    //     flag_id = 1'b0;
+    // end
+
     Instruction_Memory IM (
-        .stall_flag(flag_if),
+        .stall_flag(flag_id_in),
         .clk(clk),
         .pc(nextpc),
       	.reset(reset),
         .inp_instn(inp_instn),
         .nextpc(nextpc),
-        .pc_to_branch(pc_to_branch)
+        .pc_to_branch(pc_to_branch),
+        .stall_flag_out(flag_id)
     );
+    // always @(flag_id)
+    // $display("if flag", flag_id);
 
     IF_ID_reg IF(
         .clk(clk),
@@ -87,12 +96,13 @@ module pipeline();
     wire [1:0] alu_op_out;
 
     instruction_decoder tb (
-        .stall_flag(flag_id),
-        .stall_flag_if(flag_if),
-        .stall_flag_ex(flag_ex),
+        // .PC(PCplus4Out),
+        .stall_flag_id_in(flag_id),
+        // .stall_flag_if(flag_if),
+        // .stall_flag_ex(flag_ex),
         .stall_flag_id_out(flag_id),
-        .stall_flag_if_out(flag_if),
-        .stall_flag_ex_out(flag_ex),
+        // .stall_flag_if_out(flag_if),
+        // .stall_flag_ex_out(flag_ex),
         .clk (clk),
         .reset(reset),
         .inst_read_reg_addr1(inst_read_reg_addr1),
@@ -112,7 +122,8 @@ module pipeline();
         .rd_out_id(rd_out_id),
         .reg_write_cu(reg_write)
     );
-
+    // always @(flag_id)
+    // $display("id flag", flag_id);
     ID_EX_reg ID_EX (
         // .branch(branch),
         // .reg_write(reg_write),
@@ -149,7 +160,8 @@ module pipeline();
     );
 
     EX Ex (
-        .stall_flag(flag_ex),
+        .stall_flag_ex_in(flag_id),
+        .stall_flag_ex_out(flag_id),
         .clk (clk),
         .reset (reset),
         .branch (branch_out_id_ex),
@@ -165,7 +177,8 @@ module pipeline();
         .resultOut(resultOut),
         .pcout (pcout) // redundant
     );
-
+    always @(flag_id)
+    $display("ex flag", flag_id);
     EX_DM_register EX_DM (
         // .ALU_result (resultOut),
         .mem_to_reg_in(mem_to_reg_out_id_ex),
@@ -186,6 +199,8 @@ module pipeline();
     );
 
     DataMemory DM (
+        .stall_flag_dm_in(flag_id),
+        .stall_flag_dm_out(flag_id),
         .clk(clk),
         .reset(reset),
         .Mem_read(mem_read_out_ex_dm),
@@ -194,7 +209,8 @@ module pipeline();
         .Write_data(Write_data),
         .Read_Data(Read_Data)
     );
-
+    always @(flag_id)
+    $display("dm flag", flag_id);
     MEM_WB_reg DM_WB (
         .clk(clk),
         .alu_result(resultOut),
@@ -231,6 +247,7 @@ module pipeline();
     initial
     begin
     $monitor("time=%3d, reg_wr_data=%d \n", $time, reg_wr_data);
+    flag_id_in<=1'b0;
     clk <= 0;
     reset <= 1;
     #500

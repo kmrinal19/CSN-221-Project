@@ -1,5 +1,5 @@
-module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
-    input stall_flag;
+module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
+    input stall_flag_ex_in;
     input reset;        //To start from a known state - not necessary
     input clk;
     input wire [31:0] pc;
@@ -13,6 +13,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     reg [3:0] ALUControl;
     reg [31:0] result;
     output reg zero;
+    output reg stall_flag_ex_out;
     output reg [31:0] address;
     output reg [31:0] resultOut;
     output reg [31:0] pcout;
@@ -28,7 +29,9 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     always @(ALUSrc or rt or sign_ext)
     begin
-        if (stall_flag==0)
+        stall_flag_ex_out = stall_flag_ex_in;
+        $display("ex flag", stall_flag_ex_out);
+        if (stall_flag_ex_in==0)
         
             #1
             begin
@@ -54,7 +57,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     always @*
     begin
-    if (stall_flag==0)
+    if (stall_flag_ex_in==0)
     
     #1
     begin
@@ -107,7 +110,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     always @(posedge reset) zero <= 1'b0;
     always @(ALUControl or data1 or data2)
     begin
-    if (stall_flag==0)
+    if (stall_flag_ex_in==0)
     
     #1
     
@@ -156,7 +159,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     always @(branch or zero)
     begin
-    if (stall_flag==0)
+    if (stall_flag_ex_in==0)
     
     // #1
     begin
@@ -170,13 +173,12 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     end
     end
 
-    always@(posedge clk or stall_flag)
+    always@(posedge clk or stall_flag_ex_in)
     begin
-    if (stall_flag==0)
-    
-
-        begin
+    if (stall_flag_ex_in==0)
+    begin
         resultOut<=result;
+         
         end
     end
 
