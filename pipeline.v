@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "PC.v"
 `include "IF_Unit/Instruction_Memory.v"
 `include "execution/EX.v"
 `include "data_memory/data_memory.v"
@@ -19,7 +20,7 @@ module pipeline();
     reg clk, reset;
     wire mem_to_reg_out_ex_dm;
     // reg [31:0] registers[0:31];
-    wire [31:0] pc;
+    // wire [31:0] pc;
     reg [31:0] Imemory [0:1023];
     wire [31:0] inp_instn;
     wire [31:0] nextpc;
@@ -46,11 +47,11 @@ module pipeline();
     Instruction_Memory IM (
         .stall_flag(flag_id_in),
         .clk(clk),
-        .pc(nextpc),
+        // .pc(nextpc),
       	.reset(reset),
         .inp_instn(inp_instn),
-        .nextpc(nextpc),
-        .pc_to_branch(pc_to_branch),
+        // .nextpc(nextpc),
+        // .pc_to_branch(pc_to_branch),
         .stall_flag_out(flag_id1)
     );
     // always @(flag_id)
@@ -172,11 +173,11 @@ module pipeline();
         .ALUSrc (alu_src_out_id_ex),
         .ALUOp (alu_op_out_id_ex),
         // .funct (funct),
-        .pc (nextpc_out),
+        // .pc (nextpc_out),
         .address(branch_address),
         .zero (zero),
-        .resultOut(resultOut),
-        .pcout (pcout) // redundant
+        .resultOut(resultOut)
+        // .pcout (pcout) // redundant
     );
     always @(flag_id)
     $display("ex flag", flag_id);

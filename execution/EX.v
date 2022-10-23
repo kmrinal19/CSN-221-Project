@@ -1,8 +1,8 @@
-module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
+module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, zero, address, resultOut, offset);
     input stall_flag_ex_in;
     input reset;        //To start from a known state - not necessary
     input clk;
-    input wire [31:0] pc;
+    // input wire [31:0] pc;
     input wire branch;
     input wire [31:0] rs;
     input wire [31:0] rt;
@@ -16,7 +16,7 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
     output reg stall_flag_ex_out;
     output reg [31:0] address;
     output reg [31:0] resultOut;
-    output reg [31:0] pcout;
+    // output reg [31:0] pcout;
     // output reg [3:0] ALUControlOut;
 
     // wire [3:0] ALUControl;
@@ -60,7 +60,7 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
     
     #1
     begin
-        pcout = pc;
+        // pcout = pc;
     case(ALUOp) //aluop same for lw and sw and addi... first it is going to load before addi
 
         LW: //address always in rs and data in rt
@@ -166,8 +166,8 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
         begin
             $display("hello");
             offset = sign_ext<<2;
-            address = offset + pc;
-            assign pcout = address;
+            address = offset + PC.pc;
+            PC.pc = address;
         end
     end
     end
