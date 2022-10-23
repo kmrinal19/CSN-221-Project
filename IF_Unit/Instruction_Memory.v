@@ -48,7 +48,7 @@ begin
     end
 always @ (PC.pc)
     begin
-    if (PC.pc==32'd48)
+    if (PC.pc==32'd60)
         $finish;
     end
 

@@ -16,7 +16,7 @@
 
 module pipeline();
     reg flag_id_in;
-    wire flag_id1, flag_id2, flag_id3, flag_id4;
+    wire flag_id1, flag_id2, flag_id3, flag_id4, flag_id5;
     reg clk, reset;
     wire mem_to_reg_out_ex_dm;
     // reg [31:0] registers[0:31];
@@ -75,6 +75,7 @@ module pipeline();
     // assign funct = inp_instn[5:0];
 
     ControlUnit cu (
+        .stall_flag_cu_in(flag_id_in),
         .opcode(opcode),
         .reset(reset),
         .reg_dst(reg_dst),
@@ -99,7 +100,7 @@ module pipeline();
 
     instruction_decoder tb (
         // .PC(PCplus4Out),
-        .stall_flag_id_in(flag_id1),
+        .stall_flag_id_in(flag_id_in),
         // .stall_flag_if(flag_if),
         // .stall_flag_ex(flag_ex),
         .stall_flag_id_out(flag_id2),
@@ -182,14 +183,14 @@ module pipeline();
     always @(flag_id)
     $display("ex flag", flag_id);
     EX_DM_register EX_DM (
-        // .ALU_result (resultOut),
+        .ALU_result (resultOut),
         .mem_to_reg_in(mem_to_reg_out_id_ex),
         .mem_to_reg_out_ex_dm(mem_to_reg_out_ex_dm),
         .mem_read_in (mem_read_out_id_ex),
         .mem_write_in(mem_write_out_id_ex),
         .reg_write_in(reg_write_out_id_ex),
         .Write_data_in(reg_file_out_data2),
-        // .Mem_address(Mem_address),
+        .Mem_address(Mem_address),
         .mem_read_out_ex_dm(mem_read_out_ex_dm),
         .mem_write_out_ex_dm(mem_write_out_ex_dm),
         .reg_write_out_ex_dm(reg_write_out_ex_dm),
@@ -215,7 +216,7 @@ module pipeline();
     $display("dm flag", flag_id);
     MEM_WB_reg DM_WB (
         .clk(clk),
-        .alu_result(resultOut),
+        .alu_result(Mem_address),
         .read_data(Read_Data),
         .reg_write(reg_write_out_ex_dm),
         .mem_to_reg(mem_to_reg_out_ex_dm),
@@ -237,7 +238,9 @@ module pipeline();
         .dm_data_out(read_data_out_wb),
         .wb_data(reg_wr_data),
         .reg_write_out_wb(reg_write_out_wb),
-        // .rd_out_wb(rd_out_dm_wb)
+        // .rd_out_wb(rd_out_dm_wb),
+        .stall_flag_wb_in(flag_id4),
+        .stall_flag_wb_out(flag_id5),
         .rd_out_wb(rd_out_wb)
     );
 

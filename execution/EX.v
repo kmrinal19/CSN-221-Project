@@ -27,9 +27,10 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
     reg [31:0] data2;
     // pcout = pc;
 
-    always @(ALUSrc or rt or sign_ext)
+    always @(ALUSrc or rt or sign_ext  or posedge clk)
     begin
-        
+        stall_flag_ex_out = stall_flag_ex_in;
+
         if (stall_flag_ex_in==0)
         
             #1
@@ -49,8 +50,8 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
     parameter BEQ = 2'b01;
     parameter RType = 2'b10;
     parameter ADD = 6'b000000;
-    parameter SUB = 6'b000001;
-    parameter MUL = 6'b000010;
+    parameter SUB = 6'b000010;
+    parameter MUL = 6'b000001;
 
     assign funct = sign_ext[5:0];
 
@@ -89,10 +90,10 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
                 ALUControl = 4'b0000;
 
             SUB:
-                ALUControl = 4'b0001;
+                ALUControl = 4'b0010;
 
             MUL:
-                ALUControl = 4'b0010;
+                ALUControl = 4'b0001;
 
         endcase
 
@@ -130,12 +131,12 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
         end
 
 
-    4'b0001:
+    4'b0010:
         begin
         result <= data1 - data2;
         end
 
-    4'b0010:
+    4'b0001:
         begin
         result <= data1 * data2;
         end
