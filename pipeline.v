@@ -104,14 +104,12 @@ module pipeline();
         .reg_wr_addr_wb(rd_out_wb), // Now, writing at address recieved from wb stage
         .reg_wr_data(reg_wr_data),
         .inst_imm_field(out_instn[15:0]),
-        .reg_dst(reg_dst),
         .reg_write(reg_write_out_wb),
         .reg_file_rd_data1(reg_file_rd_data1),
         .reg_file_rd_data2(reg_file_rd_data2),
         .imm_field_wo_sgn_ext(imm_field_wo_sgn_ext),
         .sgn_ext_imm(sgn_ext_imm),
         .imm_sgn_ext_lft_shft(imm_sgn_ext_lft_shft),
-        .rd_out_id(rd_out_id),
         .reg_write_cu(reg_write)
     );
 
@@ -144,10 +142,7 @@ module pipeline();
         // .reset(reset),
         // .rd_out_id_ex(rd_out_id_ex)
 
-        branch, reg_write, mem_to_reg, mem_write, mem_read,
-        // rd_in_id_ex, replacing with rd_out_id
-        rd_out_id,
-        alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, rd_out_id_ex
+        branch, reg_write, mem_to_reg, mem_write, mem_read, rd_in_id_ex, alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, reg_dst, reg_dst_id_ex
     );
 
     // EX Ex (
@@ -173,6 +168,7 @@ module pipeline();
         .clk (clk),
         .reset (reset),
         .branch (branch_out_id_ex),
+
         .rs (reg_file_out_data1),
         .rt (reg_file_out_data2),
         .sign_ext (sgn_ext_imm_out),

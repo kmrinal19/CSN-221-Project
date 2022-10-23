@@ -23,7 +23,6 @@ module instruction_decoder (
     // alu_data_out removed (Redundant, to be included in WB stage)
     // mem_data_out removed (Redundant, to be included in WB stage)
     inst_imm_field,
-    reg_dst,
     reg_write,
     // mem_to_reg removed (Redundant, to be included in WB stage)
     // jr_offset removed (What is jr_offset?)
@@ -32,7 +31,6 @@ module instruction_decoder (
     imm_field_wo_sgn_ext, // wo: without
     sgn_ext_imm,
     imm_sgn_ext_lft_shft,
-    rd_out_id,
     reg_wr_addr_wb
 );
     reg registers_flag[0:31];
@@ -81,10 +79,10 @@ module instruction_decoder (
     // input [31:0] alu_data_out, mem_data_out; (Redundant, to be included in WB stage)
     input [15:0] inst_imm_field;
     input [31:0] reg_wr_data; // Added reg_wr_data
-    input reg_dst, reg_write_cu; // mem_to_reg removed(Redundant mem_to_reg signal, to be included in WB stage)
+    input reg_write_cu; // mem_to_reg removed(Redundant mem_to_reg signal, to be included in WB stage)
     output [31:0] reg_file_rd_data1, reg_file_rd_data2, sgn_ext_imm, imm_sgn_ext_lft_shft;
     output reg [15:0] imm_field_wo_sgn_ext;
-    output reg [4:0] rd_out_id;
+    // output reg [4:0] rd_out_id;
     output reg stall_flag_if_out, stall_flag_ex_out, stall_flag_id_out;
     // computing multiplexer results
     wire [4:0] reg_wr_addr; // Changed reg to wire due to error in line 37
@@ -105,10 +103,10 @@ module instruction_decoder (
             // $display(stall_flag_if_out, " ", stall_flag_id_out, " ", stall_flag_ex_out);
         end
 
-    Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag, reg_dst, reg_wr_addr);
+    // Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag, reg_dst, reg_wr_addr);
 
-    always @(clk)
-        $display("time =%3d ID write address",$time, reg_wr_addr);
+    // always @(clk)
+    //     $display("time =%3d ID write address",$time, reg_wr_addr);
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
     //#1
     // register file
@@ -165,21 +163,21 @@ module instruction_decoder (
         t_reg_wr_addr_wb = reg_wr_addr_wb;
     end
 
-    always @(negedge clk)
+    always @(posedge clk)
     // #10
     // #1
     begin
-        flag_reg_wr_addr <= reg_wr_addr;
+        // flag_reg_wr_addr <= reg_wr_addr;
         flag_reg_wr_addr_wb <= t_reg_wr_addr_wb;
-        rd_out_id <= reg_wr_addr;
+        // rd_out_id <= reg_wr_addr;
         // stall_flag_if_out <= stall_flag_if;
         // stall_flag_ex_out <= stall_flag_ex;
         // stall_flag_id_out <= stall_flag,
         // #1
         // $display("check address= %d",rd_out_id);
 
-        if (reg_write_cu==1)
-            registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set
+        // if (reg_write_cu==1)
+        //     registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set
 
         if (reg_write==1)
         begin

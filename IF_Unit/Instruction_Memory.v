@@ -29,7 +29,7 @@ always @ (posedge reset)
 always @ (clk)
 $display ("time=%3d, inp_instn=%b, nextpc=%b, pc_to _branch=%b stall = %b\n", $time, inp_instn, nextpc, pc_to_branch, stall_flag);
 
-always @ (negedge clk)
+always @ (posedge clk)
     begin
     if (stall_flag==0)
         begin

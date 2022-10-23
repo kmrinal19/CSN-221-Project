@@ -64,7 +64,7 @@ module RegisterFile(stall_flag, inst_read_reg_addr1, inst_read_reg_addr2, reg_wr
 
     // always@(reg_wr_data, reg_wr_addr) $display("reg_wr_data =%d, reg_wr_addr=%d",reg_wr_data, reg_wr_addr);
 
-	always @(negedge clk)
+	always @(posedge clk)
 	// if (stall_flag==0)
 	// begin
 	// #8

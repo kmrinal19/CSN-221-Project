@@ -23,7 +23,7 @@ module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,a
    reg_write <= 1'b0;
   end
 
-  always@(posedge clk, opcode)
+  always@(posedge clk)
     begin
       case (opcode)
 
