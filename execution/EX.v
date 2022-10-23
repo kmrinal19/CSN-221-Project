@@ -126,7 +126,6 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
 
     4'b0000:
         begin
-        $display("data1=%d, data2=%d \n", data1, data2);
         result <= data1 + data2;
         end
 
@@ -146,7 +145,6 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
 
     if (branch==1 && zero==1)
         begin
-            $display("hello");
             offset = sign_ext<<2;
             // #1
             // address = offset + pc;
@@ -165,7 +163,6 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
     begin
         if (branch==1 && zero==1)
         begin
-            $display("hello");
             offset = sign_ext<<2;
             address = offset + PC.pc;
             PC.pc = address;
@@ -176,7 +173,6 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
     always@(posedge clk or stall_flag_ex_in)
     begin
     stall_flag_ex_out = stall_flag_ex_in;
-        $display("SSSSSSSSSSSSSSSS\n ex flag", stall_flag_ex_in);
     if (stall_flag_ex_in==0)
     begin
         resultOut<=result;
@@ -184,6 +180,4 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
         end
     end
 
-    always@(posedge clk)
-        $display("EX", resultOut);
 endmodule

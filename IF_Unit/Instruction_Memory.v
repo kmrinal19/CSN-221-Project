@@ -32,18 +32,15 @@ initial //for testing
 always @ (PC.pc or stall_flag or posedge clk)
 begin
     stall_flag_out <= stall_flag;
-    $display("Vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", stall_flag_out);
     if (stall_flag==0)
     begin
         // confirm = 1'b0;
         
             #20  //enabling this leads to $readmemb: Unable to open Icode.txt for reading.
             // #1
-            $display ("time=%3d, inp_instn=%b, pc,\n", $time, inp_instn, PC.pc);
             inp_instn  = Imemory[PC.pc/4];  //Was given to be [pc>>2]
             // pc_to_branch = PC.pc;
             PC.pc = PC.pc+4;             // pc value is not being updated, so the pc in next cycle will be the nextpc outpur received in this cycle
-             $display("if flag", stall_flag);
         end
     end
 always @ (PC.pc)

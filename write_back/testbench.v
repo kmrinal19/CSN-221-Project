@@ -28,7 +28,6 @@ initial begin
     alu_data_out = 5;
     dm_data_out = 4;
 	#30
-    $display("wb_data=%d", wb_data);
     $finish;
 
 end

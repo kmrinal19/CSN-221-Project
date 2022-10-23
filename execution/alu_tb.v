@@ -38,7 +38,6 @@ module main;
 
     initial 
     begin
-        $display ("time=%3d, result=%b, zero=%b \n", $time, result, zero);
         $finish;
         #20
         data1 = 5;

@@ -51,19 +51,20 @@ always @(posedge clk)
 					RegisterFileGlb.registers[rd_out_wb] = wb_data;
 					RegisterFileGlb.registers_flag[rd_out_wb] = 1'b0;
 					stall_flag_wb_out <= 1'b0;
-					#1
-					$display ("time=%3d, ans=%b addr=%b data=%b \n", $time, RegisterFileGlb.registers[rd_out_wb], rd_out_wb,wb_data);
+					// #1
+					// $display ("time=%3d, ans=%b addr=%b data=%b \n", $time, RegisterFileGlb.registers[rd_out_wb], rd_out_wb,wb_data);
 				end
 		end
 	// end
 	always@(posedge clk)
 	begin
+		$display("Register Output:");
 		for(i=0; i<32; i=i+1)
 			$display("Register ", i , " ", RegisterFileGlb.registers[i]);
 	end
 
-    always@(posedge clk)
-    $display("Writeback ", rd_out_wb, " ", wb_data);
+    // always@(posedge clk)
+    // $display("Writeback ", rd_out_wb, " ", wb_data);
 endmodule
 
 

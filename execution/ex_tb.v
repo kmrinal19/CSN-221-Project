@@ -59,7 +59,6 @@ module testb;
         ALUOp = 2'b01;
       	branch = 1'b1;
         #40
-        $display ("time=%3d, address=%b, zero=%b, result=%d, pcout=%b, offset%b \n", $time, address, zero, resultOut, pcout, offset);
       	$finish;
 
         

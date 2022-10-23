@@ -64,7 +64,6 @@ module testb;
         inst_imm_field = 15'd129;
         opcode = 6'b000001;
         #60
-        $display ("time=%3d, rs=%b, rt=%b, rd=%b, reg_wr_data=%b, inst_imm_field=%b, reg_dst=%b, reg_write=%b, reg_file_rd_data1=%d, reg_file_rd_data2=%d, imm_field_wo_sgn_ext=%b, sgn_ext_imm=%b, imm_sgn_ext_lft_shft=%b \n", $time, inst_read_reg_addr1, inst_read_reg_addr2, rd, reg_wr_data, inst_imm_field, reg_dst, reg_write, reg_file_rd_data1,reg_file_rd_data2, imm_field_wo_sgn_ext, sgn_ext_imm, imm_sgn_ext_lft_shft);
       	$finish;
     end
 
