@@ -36,7 +36,7 @@ module instruction_decoder (
     reg_wr_addr_wb
 );
     reg registers_flag[0:31];
-    
+
     always @(posedge reset)
         begin
             registers_flag[0] <= 1'b0;
@@ -88,8 +88,10 @@ module instruction_decoder (
     output reg stall_flag_if_out, stall_flag_ex_out, stall_flag_id_out;
     // computing multiplexer results
     wire [4:0] reg_wr_addr; // Changed reg to wire due to error in line 37
-    // reg [4:0] reg_wr_addr; 
+    // reg [4:0] reg_wr_addr;
     // reg [31:0] reg_wr_data; (removed calculation of reg_wr_data)
+    reg [4:0] t_reg_wr_addr_wb;
+
 
     always @(posedge clk)
         begin
@@ -97,16 +99,16 @@ module instruction_decoder (
             begin
                     stall_flag_if_out <= 1'b1;
                     stall_flag_id_out <= 1'b1;
-                    stall_flag_ex_out <= 1'b1;
+                    // stall_flag_ex_out <= 1'b1;
             end
-            $display("TESTINGGGGGGGGGGGGGGGG");
-            $display(stall_flag_if_out, " ", stall_flag_id_out, " ", stall_flag_ex_out);
+            $display("DECODE UNIT TESTING");
+            // $display(stall_flag_if_out, " ", stall_flag_id_out, " ", stall_flag_ex_out);
         end
 
     Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag, reg_dst, reg_wr_addr);
-    
-    always @(posedge clk)
-        $display("ID", reg_wr_addr);
+
+    always @(clk)
+        $display("time =%3d ID write address",$time, reg_wr_addr);
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
     //#1
     // register file
@@ -125,12 +127,10 @@ module instruction_decoder (
 
     // assign imm_field_wo_sgn_ext = inst_imm_field; //Added below block in place
 
-    always @(inst_imm_field or stall_flag) 
+    always @(posedge clk)
     if (stall_flag==0)
-        begin    
-            begin
+        begin
                 imm_field_wo_sgn_ext <= inst_imm_field;
-            end
         end
     // always @(posedge clk)
     // begin
@@ -138,20 +138,20 @@ module instruction_decoder (
     // end
     // always @(negedge clk)
     // $display ("dsvrgssa");
-    
-    
+
+
     // reg [4:0] a;
     // initial
     // begin
-        
+
     //     // rd_out_id <= reg_wr_addr;
-        
+
     //     a <= reg_wr_addr; //haven't checked wire to reg conversion
 
-    //     registers_flag[a] <= 1'b1;   //stall flag set 
+    //     registers_flag[a] <= 1'b1;   //stall flag set
     //     #1
-        
-        
+
+
     //     $display ("dsva",registers_flag[a]);
     //     $finish;
     //     // if (reg_write==1)
@@ -159,20 +159,28 @@ module instruction_decoder (
     // end
     reg [4:0] flag_reg_wr_addr;
     reg [4:0] flag_reg_wr_addr_wb;
-    always @(negedge clk or reg_wr_addr)
+
+    always @(posedge clk)
+    begin
+        t_reg_wr_addr_wb = reg_wr_addr_wb;
+    end
+
+    always @(negedge clk)
     // #10
-    #1
+    // #1
     begin
         flag_reg_wr_addr <= reg_wr_addr;
-        flag_reg_wr_addr_wb <= reg_wr_addr_wb;
+        flag_reg_wr_addr_wb <= t_reg_wr_addr_wb;
         rd_out_id <= reg_wr_addr;
         // stall_flag_if_out <= stall_flag_if;
         // stall_flag_ex_out <= stall_flag_ex;
         // stall_flag_id_out <= stall_flag,
-        #1
+        // #1
         // $display("check address= %d",rd_out_id);
+
         if (reg_write_cu==1)
-            registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set 
+            registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set
+
         if (reg_write==1)
         begin
             registers_flag[reg_wr_addr_wb] <= 1'b0;

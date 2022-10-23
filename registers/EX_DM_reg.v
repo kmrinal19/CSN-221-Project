@@ -14,7 +14,7 @@ always @(posedge reset)
     begin
       flag_ex_dm = 1'b1;
     end
-always @(posedge clk)
+always @(negedge clk)
     begin
         rd_out_ex_dm <= rd_in_ex_dm;
         mem_read_out_ex_dm <= mem_read_in;

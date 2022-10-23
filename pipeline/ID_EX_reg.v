@@ -1,9 +1,9 @@
-module ID_EX_reg (reg_write, mem_to_reg, mem_to_write, mem_read,alu_src, alu_op, nextpc ,reg_file_rd_data1 ,reg_file_rd_data2,sgn_ext_imm 
+module ID_EX_reg (reg_write, mem_to_reg, mem_to_write, mem_read,alu_src, alu_op, nextpc ,reg_file_rd_data1 ,reg_file_rd_data2,sgn_ext_imm
 		,inst_imm_field ,nextpc_out ,reg_file_out_data1 ,reg_file_out_data2 ,sgn_ext_imm_out
 		,mem_to_reg_out_id_ex,mem_write_out_id_ex, mem_read_out_id_ex,alu_src_out, alu_op_out, reg_dst_out,clk, reset);
-  
+
   input wire reg_write, mem_to_reg;
-  input wire mem_to_write, mem_read; 
+  input wire mem_to_write, mem_read;
   input wire alu_src;
   input wire [1:0] alu_op;
   input wire [31:0] nextpc ,reg_file_rd_data1 ,reg_file_rd_data2 ,sgn_ext_imm;
@@ -20,7 +20,7 @@ module ID_EX_reg (reg_write, mem_to_reg, mem_to_write, mem_read,alu_src, alu_op,
 
   always @(posedge reset)
     begin
-      flag_id_ex = 1'b1;
+      flag_id_ex = 1'b1; // This flag is not being used
     end
   always @(posedge clk)
     begin
@@ -38,5 +38,5 @@ module ID_EX_reg (reg_write, mem_to_reg, mem_to_write, mem_read,alu_src, alu_op,
       alu_op_out <= alu_op;
       // reg_dst_out <= reg_dst;
     end
-  
+
 endmodule

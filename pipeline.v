@@ -46,6 +46,12 @@ module pipeline();
         .pc_to_branch(pc_to_branch)
     );
 
+    // assign opcode = inp_instn[31:26]; // changes to be made in controlunit.v
+    // assign inst_read_reg_addr1 = inp_instn[25:21];
+    // assign inst_read_reg_addr2 = inp_instn[20:16];
+    // assign rd = inp_instn[15:11];
+    // assign inst_imm_field = inp_instn[15:0];
+
     IF_ID_reg IF(
         .clk(clk),
         .reset(reset),
@@ -56,15 +62,10 @@ module pipeline();
         .currpc_out(currpc_out),
         .out_instn(out_instn)
     );
-    assign opcode = inp_instn[31:26]; // changes to be made in controlunit.v
-    assign inst_read_reg_addr1 = inp_instn[25:21];
-    assign inst_read_reg_addr2 = inp_instn[20:16];
-    assign rd = inp_instn[15:11];
-    assign inst_imm_field = inp_instn[15:0];
-    // assign funct = inp_instn[5:0];
+
 
     ControlUnit cu (
-        .opcode(opcode),
+        .opcode(out_instn[31:26]),
         .reset(reset),
         .reg_dst(reg_dst),
         .branch(branch),
@@ -73,7 +74,8 @@ module pipeline();
         .alu_op(alu_op),
         .mem_write(mem_write),
         .alu_src(alu_src),
-        .reg_write(reg_write)
+        .reg_write(reg_write),
+        .clk(clk)
         );
 
     wire [31:0] reg_wr_data;
@@ -95,13 +97,13 @@ module pipeline();
         .stall_flag_ex_out(flag_ex),
         .clk (clk),
         .reset(reset),
-        .inst_read_reg_addr1(inst_read_reg_addr1),
-        .inst_read_reg_addr2(inst_read_reg_addr2),
-        .rd(rd), // Raw rd from instruction
+        .inst_read_reg_addr1(out_instn[25:21]),
+        .inst_read_reg_addr2(out_instn[20:16]),
+        .rd(out_instn[15:11]), // Raw rd from instruction
         // .rd(rd_out_wb),
         .reg_wr_addr_wb(rd_out_wb), // Now, writing at address recieved from wb stage
         .reg_wr_data(reg_wr_data),
-        .inst_imm_field(inst_imm_field),
+        .inst_imm_field(out_instn[15:0]),
         .reg_dst(reg_dst),
         .reg_write(reg_write_out_wb),
         .reg_file_rd_data1(reg_file_rd_data1),
@@ -142,11 +144,29 @@ module pipeline();
         // .reset(reset),
         // .rd_out_id_ex(rd_out_id_ex)
 
-        branch, reg_write, mem_to_reg, mem_write, mem_read, 
+        branch, reg_write, mem_to_reg, mem_write, mem_read,
         // rd_in_id_ex, replacing with rd_out_id
         rd_out_id,
         alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, rd_out_id_ex
     );
+
+    // EX Ex (
+    //     .stall_flag(flag_ex),
+    //     .clk (clk),
+    //     .reset (reset),
+    //     .branch (branch),
+    //     .rs (reg_file_rd_data1),
+    //     .rt (reg_file_rd_data2),
+    //     .sign_ext (sgn_ext_imm),
+    //     .ALUSrc (alu_src),
+    //     .ALUOp (alu_op),
+    //     // .funct (funct),
+    //     .pc (nextpc),
+    //     .address(branch_address),
+    //     .zero (zero),
+    //     .resultOut(resultOut),
+    //     .pcout (pcout) // redundant
+    // );
 
     EX Ex (
         .stall_flag(flag_ex),
@@ -225,16 +245,17 @@ module pipeline();
 
     always@(clk)
     // #10 clk <= ~clk;
-    #10 clk <= ~clk;
+    #100 clk <= ~clk;
 
 
     initial
     begin
     $monitor("time=%3d, reg_wr_data=%d \n", $time, reg_wr_data);
-    clk <= 0;
-    reset <= 1;
-    #500
-    reset <= 0;
+    reset = 1;
+    #100
+    clk = 0;
+    // #500
+    // reset <= 0;
     end
     // always@(posedge reset)
     // begin

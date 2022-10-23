@@ -22,15 +22,13 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     // wire [31:0] result;
     output reg [31:0] offset;
     // wire [31:0] neg_data2 = -data2;
-    wire [31:0] data1 = rs;
-    reg [31:0] data2;
+    reg [31:0] data2, t_pcout, t_offset, t_address;
+    reg t_zero;
     // pcout = pc;
 
-    always @(ALUSrc or rt or sign_ext)
+    always @(posedge clk)
     begin
         if (stall_flag==0)
-        
-            #1
             begin
             if(ALUSrc == 0)
             data2 <= rt;
@@ -52,130 +50,114 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     assign funct = sign_ext[5:0];
 
-    always @*
+    always @(posedge clk)
     begin
-    if (stall_flag==0)
-    
-    #1
-    begin
-        pcout = pc;
-    case(ALUOp) //aluop same for lw and sw and addi... first it is going to load before addi
-
-        LW: //address always in rs and data in rt
+        if (stall_flag==0)
         begin
-            ALUControl = 4'b0000;
-            offset = sign_ext; //check if shift is necessary
-            data2 = offset;
-        end
+            t_pcout = pc;
+        case(ALUOp) //aluop same for lw and sw and addi... first it is going to load before addi
 
-        SW:
-        begin
-            ALUControl = 4'b0000;
-            offset = sign_ext; //check if shift is necessary
-            data2 = offset;
-        end
-        ADDI:
-            ALUControl = 4'b0000;
+            LW: //address always in rs and data in rt
+            begin
+                ALUControl = 4'b0000;
+                t_offset = sign_ext; //check if shift is necessary
+                data2 = t_offset;
+            end
 
-        BEQ:
-            ALUControl = 4'b0001;
-
-    RType:
-        case(funct)
-
-            ADD:
+            SW:
+            begin
+                ALUControl = 4'b0000;
+                t_offset = sign_ext; //check if shift is necessary
+                data2 = t_offset;
+            end
+            ADDI:
                 ALUControl = 4'b0000;
 
-            SUB:
+            BEQ:
                 ALUControl = 4'b0001;
 
-            MUL:
-                ALUControl = 4'b0010;
+        RType:
+            case(funct)
+
+                ADD:
+                    ALUControl = 4'b0000;
+
+                SUB:
+                    ALUControl = 4'b0001;
+
+                MUL:
+                    ALUControl = 4'b0010;
+
+            endcase
+
 
         endcase
 
-
-    endcase
-
-    end
+        end
     end
 
-    //ALU
-    // parameter ADD = 4'b0000;
-    // parameter MUL = 4'b0010;
-    // parameter SUB = 4'b0001;
     always @(posedge reset) zero <= 1'b0;
-    always @(ALUControl or data1 or data2)
+    always @(posedge clk)
     begin
     if (stall_flag==0)
-    
-    #1
-    
-
-    begin
-
-    if(data1 == data2)
-    zero <= 1'b1;
-    else
-    zero <= 1'b0;
-
-    case(ALUControl)
-
-    4'b0000:
         begin
-        $display("data1=%d, data2=%d \n", data1, data2);
-        result <= data1 + data2;
+        if(rs == data2)
+        t_zero <= 1'b1;
+        else
+        t_zero <= 1'b0;
+
+        case(ALUControl)
+
+        4'b0000:
+            begin
+            $display("time = %3d, data1=%d, data2=%d \n", $time, rs, data2);
+            result <= rs + data2;
+            end
+
+
+        4'b0001:
+            begin
+            result <= rs - data2;
+            end
+
+        4'b0010:
+            begin
+            result <= rs * data2;
+            end
+
+
+        endcase
+
+        if (branch==1 && t_zero==1)
+            begin
+                t_offset = sign_ext<<2;
+            end
         end
-
-
-    4'b0001:
-        begin
-        result <= data1 - data2;
-        end
-
-    4'b0010:
-        begin
-        result <= data1 * data2;
-        end
-
-
-    endcase
-
-    if (branch==1 && zero==1)
-        begin
-            $display("hello");
-            offset = sign_ext<<2;
-            // #1
-            // address = offset + pc;
-            // #1
-            // pcout = address;
-        end
-    // $display("hello");
-    end
     end
 
-    always @(branch or zero)
+    always @(posedge clk)
     begin
     if (stall_flag==0)
-    
+
     // #1
     begin
-        if (branch==1 && zero==1)
+        if (branch==1 && t_zero==1)
         begin
-            $display("hello");
-            offset = sign_ext<<2;
-            address = offset + pc;
-            assign pcout = address;
+            t_offset = sign_ext<<2;
+            t_address = offset + pc;
+            t_pcout = t_address;
         end
     end
     end
 
-    always@(posedge clk or stall_flag)
+    always@(negedge clk)
     begin
     if (stall_flag==0)
-    
-
         begin
+        zero <= t_zero;
+        address <= t_address;
+        offset <= t_offset;
+        pcout <= t_pcout;
         resultOut<=result;
         end
     end
