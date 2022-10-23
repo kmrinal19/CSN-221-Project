@@ -79,12 +79,10 @@ module instruction_decoder (
                     stall_flag_id_out <= 1'b1;
             else
                 stall_flag_id_out <= 1'b0;
-            $display("id flag", stall_flag_id_in);
                 
 
             if (stall_flag_id_out)
                 PC.pc = PC.pc - 4;
-            $display("TESTINGGGGGGGGGGGGGGGG");
             // $display(stall_flag_if_out, " ", stall_flag_id_out, " ", stall_flag_ex_out);
         end
 
@@ -111,7 +109,6 @@ module instruction_decoder (
     always @(inst_imm_field or stall_flag_id_in) 
     begin
     stall_flag_id_out = stall_flag_id_in;
-    $display("id flag", stall_flag_id_out);
     if (stall_flag_id_out==0)
             
             begin
@@ -171,7 +168,6 @@ module instruction_decoder (
         //     stall_flag_id_out <= 1'b0;
         //     // stall_flag_ex_out <= 1'b0;
         // end
-        $display("id flag", stall_flag_id_out);
     end
 
 endmodule

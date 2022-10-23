@@ -27,6 +27,4 @@ always @(posedge clk)
         // $display("time=%3d, check address= %d \n",$time,rd_in_ex_dm);
     end
 
-always@(posedge clk)
-    $display("EX_DM", rd_out_ex_dm);
 endmodule

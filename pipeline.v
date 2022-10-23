@@ -180,8 +180,7 @@ module pipeline();
         .resultOut(resultOut)
         // .pcout (pcout) // redundant
     );
-    always @(flag_id)
-    $display("ex flag", flag_id);
+
     EX_DM_register EX_DM (
         .ALU_result (resultOut),
         .mem_to_reg_in(mem_to_reg_out_id_ex),
@@ -212,8 +211,7 @@ module pipeline();
         .Write_data(Write_data),
         .Read_Data(Read_Data)
     );
-    always @(flag_id)
-    $display("dm flag", flag_id);
+
     MEM_WB_reg DM_WB (
         .clk(clk),
         .alu_result(Mem_address),

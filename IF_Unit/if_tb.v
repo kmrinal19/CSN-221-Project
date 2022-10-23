@@ -40,7 +40,6 @@ module testb;
       	
       	#30
       
-      $display ("time=%3d, inp_instn=%b, nextpc=%b, pc_to _branch=%b \n", $time, inp_instn, nextpc, pc_to_branch);
         $finish;
 
     end

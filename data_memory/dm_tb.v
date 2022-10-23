@@ -39,7 +39,6 @@ module dm_test_bench;
       Mem_address = 0;
       Write_data = 20;
       #20
-      $display ("time=%3d, Mem_read=%b, Mem_write=%b, Mem_address=%b, Write_data=%b, Read_Data=%b \n", $time,Mem_read,Mem_write,Mem_address,Write_data, Read_Data);
       
       #10
       Mem_read = 1'b1;
@@ -47,7 +46,6 @@ module dm_test_bench;
       Mem_address = 0;
       Write_data = 30;
       #20
-      $display ("time=%3d, Mem_read=%b, Mem_write=%b, Mem_address=%b, Write_data=%b, Read_Data=%b \n", $time,Mem_read,Mem_write,Mem_address,Write_data, Read_Data);
       
       $finish;
     end
