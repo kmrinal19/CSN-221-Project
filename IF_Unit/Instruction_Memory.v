@@ -32,7 +32,8 @@ always @ (posedge reset)
     end
 always @ (pc or stall_flag)
 begin
-    $display("Vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", stall_flag);
+    stall_flag_out <= stall_flag;
+    $display("Vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", stall_flag_out);
     if (stall_flag==0)
     begin
         // confirm = 1'b0;
@@ -43,7 +44,7 @@ begin
             inp_instn  = Imemory[pc/4];  //Was given to be [pc>>2]
             pc_to_branch = pc;
             nextpc <= pc+32'd4;             // pc value is not being updated, so the pc in next cycle will be the nextpc outpur received in this cycle
-             $display("if flag", stall_flag_out);
+             $display("if flag", stall_flag);
         end
     end
 always @ (pc)

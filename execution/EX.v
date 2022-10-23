@@ -29,8 +29,7 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
 
     always @(ALUSrc or rt or sign_ext)
     begin
-        stall_flag_ex_out = stall_flag_ex_in;
-        $display("ex flag", stall_flag_ex_out);
+        
         if (stall_flag_ex_in==0)
         
             #1
@@ -175,6 +174,8 @@ module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, AL
 
     always@(posedge clk or stall_flag_ex_in)
     begin
+    stall_flag_ex_out = stall_flag_ex_in;
+        $display("SSSSSSSSSSSSSSSS\n ex flag", stall_flag_ex_in);
     if (stall_flag_ex_in==0)
     begin
         resultOut<=result;

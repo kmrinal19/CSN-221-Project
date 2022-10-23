@@ -74,7 +74,7 @@ module instruction_decoder (
 
             // stall_flag_ex_out <= 1'b0;
             // stall_flag_if_out <= 1'b0;
-            // stall_flag_id_out <= 1'b0;
+            stall_flag_id_out <= 1'b0;
         end
     input clk, reset, reg_write, stall_flag_id_in;
     input [4:0] inst_read_reg_addr1 ,inst_read_reg_addr2, rd, reg_wr_addr_wb; //rt removed
@@ -86,16 +86,18 @@ module instruction_decoder (
     output reg [15:0] imm_field_wo_sgn_ext;
     output reg [4:0] rd_out_id;
     output reg stall_flag_id_out;
+    
     // computing multiplexer results
     wire [4:0] reg_wr_addr; // Changed reg to wire due to error in line 37
     // reg [4:0] reg_wr_addr; 
     // reg [31:0] reg_wr_data; (removed calculation of reg_wr_data)
-    initial
-    begin
-        stall_flag_id_out = 1'b0;
-    end
+    // initial
+    // begin
+    //     stall_flag_id_out = 1'b0;
+    // end
     always @(posedge clk)
         begin
+            stall_flag_id_out = stall_flag_id_in;
             if(registers_flag[inst_read_reg_addr1]==1 || registers_flag[inst_read_reg_addr2]==1)
             begin
                     // stall_flag_if_out <= 1'b1;
@@ -103,17 +105,18 @@ module instruction_decoder (
 
                     // stall_flag_ex_out <= 1'b1;
             end
-            else
-                stall_flag_id_out <= 1'b0;
-                $display("id flag", stall_flag_id_out);
+            // else
+            //     stall_flag_id_out <= 1'b0;
+                $display("id flag", stall_flag_id_in);
+                
             $display("TESTINGGGGGGGGGGGGGGGG");
             // $display(stall_flag_if_out, " ", stall_flag_id_out, " ", stall_flag_ex_out);
         end
 
     Mux2_1_5 reg_wr_mux(inst_read_reg_addr2, rd, stall_flag_id_in, reg_dst, reg_wr_addr); 
     
-    always @(posedge clk)
-        $display("ID", reg_wr_addr);
+    // always @(posedge clk)
+        // $display("ID", reg_wr_addr);
     // Mux2_1_32 wrb_mux(alu_data_out, mem_data_out, mem_to_reg, reg_wr_data);
     //#1
     // register file
@@ -133,8 +136,11 @@ module instruction_decoder (
     // assign imm_field_wo_sgn_ext = inst_imm_field; //Added below block in place
 
     always @(inst_imm_field or stall_flag_id_in) 
+    begin
+    stall_flag_id_out = stall_flag_id_in;
+    $display("id flag", stall_flag_id_out);
     if (stall_flag_id_in==0)
-        begin    
+            
             begin
                 imm_field_wo_sgn_ext <= inst_imm_field;
             end
@@ -168,8 +174,11 @@ module instruction_decoder (
     reg [4:0] flag_reg_wr_addr_wb;
     always @(negedge clk or reg_wr_addr)
     // #10
+    
     #1
     begin
+        stall_flag_id_out = stall_flag_id_in;
+        
         flag_reg_wr_addr <= reg_wr_addr;
         flag_reg_wr_addr_wb <= reg_wr_addr_wb;
         rd_out_id <= reg_wr_addr;
@@ -180,7 +189,7 @@ module instruction_decoder (
         // $display("check address= %d",rd_out_id);
         if (reg_write_cu==1)
         begin
-            registers_flag[flag_reg_wr_addr] <= 1'b1;   //stall flag set
+            registers_flag[reg_wr_addr] <= 1'b1;   //stall flag set
         end
         if (reg_write==1)
         begin
@@ -189,6 +198,7 @@ module instruction_decoder (
             stall_flag_id_out <= 1'b0;
             // stall_flag_ex_out <= 1'b0;
         end
+        $display("id flag", stall_flag_id_out);
     end
 
 endmodule

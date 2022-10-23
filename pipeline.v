@@ -14,7 +14,7 @@
 
 module pipeline();
     reg flag_id_in;
-    wire flag_id;
+    wire flag_id1, flag_id2, flag_id3, flag_id4;
     reg clk, reset;
     wire mem_to_reg_out_ex_dm;
     // reg [31:0] registers[0:31];
@@ -50,7 +50,7 @@ module pipeline();
         .inp_instn(inp_instn),
         .nextpc(nextpc),
         .pc_to_branch(pc_to_branch),
-        .stall_flag_out(flag_id)
+        .stall_flag_out(flag_id1)
     );
     // always @(flag_id)
     // $display("if flag", flag_id);
@@ -97,10 +97,10 @@ module pipeline();
 
     instruction_decoder tb (
         // .PC(PCplus4Out),
-        .stall_flag_id_in(flag_id),
+        .stall_flag_id_in(flag_id1),
         // .stall_flag_if(flag_if),
         // .stall_flag_ex(flag_ex),
-        .stall_flag_id_out(flag_id),
+        .stall_flag_id_out(flag_id2),
         // .stall_flag_if_out(flag_if),
         // .stall_flag_ex_out(flag_ex),
         .clk (clk),
@@ -156,12 +156,12 @@ module pipeline();
         branch, reg_write, mem_to_reg, mem_write, mem_read, 
         // rd_in_id_ex, replacing with rd_out_id
         rd_out_id,
-        alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, rd_out_id_ex
+        alu_src, alu_op, nextpc ,reg_file_rd_data1,reg_file_rd_data2, sgn_ext_imm, inst_imm_field, nextpc_out, reg_file_out_data1, reg_file_out_data2, sgn_ext_imm_out, reg_write_out_id_ex, mem_to_reg_out_id_ex, mem_write_out_id_ex, mem_read_out_id_ex, branch_out_id_ex, alu_src_out_id_ex, alu_op_out_id_ex, clk, reset, rd_out_id_ex,   flag_id, flag_id
     );
-
+    wire flag_out_ex;
     EX Ex (
-        .stall_flag_ex_in(flag_id),
-        .stall_flag_ex_out(flag_id),
+        .stall_flag_ex_in(flag_id2),
+        .stall_flag_ex_out(flag_id3),
         .clk (clk),
         .reset (reset),
         .branch (branch_out_id_ex),
@@ -199,8 +199,8 @@ module pipeline();
     );
 
     DataMemory DM (
-        .stall_flag_dm_in(flag_id),
-        .stall_flag_dm_out(flag_id),
+        .stall_flag_dm_in(flag_id3),
+        .stall_flag_dm_out(flag_id4),
         .clk(clk),
         .reset(reset),
         .Mem_read(mem_read_out_ex_dm),
@@ -247,7 +247,7 @@ module pipeline();
     initial
     begin
     $monitor("time=%3d, reg_wr_data=%d \n", $time, reg_wr_data);
-    flag_id_in<=1'b0;
+    assign flag_id_in=1'b0;
     clk <= 0;
     reset <= 1;
     #500
