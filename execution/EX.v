@@ -1,8 +1,8 @@
-module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, zero, address, resultOut, pcout, offset);
-    input stall_flag;
+module EX(stall_flag_ex_in, stall_flag_ex_out, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, zero, address, resultOut, offset);
+    input stall_flag_ex_in;
     input reset;        //To start from a known state - not necessary
     input clk;
-    input wire [31:0] pc;
+    // input wire [31:0] pc;
     input wire branch;
     input wire [31:0] rs;
     input wire [31:0] rt;
@@ -13,9 +13,10 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     reg [3:0] ALUControl;
     reg [31:0] result;
     output reg zero;
+    output reg stall_flag_ex_out;
     output reg [31:0] address;
     output reg [31:0] resultOut;
-    output reg [31:0] pcout;
+    // output reg [31:0] pcout;
     // output reg [3:0] ALUControlOut;
 
     // wire [3:0] ALUControl;
@@ -26,9 +27,11 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     reg [31:0] data2;
     // pcout = pc;
 
-    always @(ALUSrc or rt or sign_ext)
+    always @(ALUSrc or rt or sign_ext  or posedge clk)
     begin
-        if (stall_flag==0)
+        stall_flag_ex_out = stall_flag_ex_in;
+
+        if (stall_flag_ex_in==0)
         
             #1
             begin
@@ -47,18 +50,18 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     parameter BEQ = 2'b01;
     parameter RType = 2'b10;
     parameter ADD = 6'b000000;
-    parameter SUB = 6'b000001;
-    parameter MUL = 6'b000010;
+    parameter SUB = 6'b000010;
+    parameter MUL = 6'b000001;
 
     assign funct = sign_ext[5:0];
 
     always @*
     begin
-    if (stall_flag==0)
+    if (stall_flag_ex_in==0)
     
     #1
     begin
-        pcout = pc;
+        // pcout = pc;
     case(ALUOp) //aluop same for lw and sw and addi... first it is going to load before addi
 
         LW: //address always in rs and data in rt
@@ -87,10 +90,10 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
                 ALUControl = 4'b0000;
 
             SUB:
-                ALUControl = 4'b0001;
+                ALUControl = 4'b0010;
 
             MUL:
-                ALUControl = 4'b0010;
+                ALUControl = 4'b0001;
 
         endcase
 
@@ -107,7 +110,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
     always @(posedge reset) zero <= 1'b0;
     always @(ALUControl or data1 or data2)
     begin
-    if (stall_flag==0)
+    if (stall_flag_ex_in==0)
     
     #1
     
@@ -128,12 +131,12 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
         end
 
 
-    4'b0001:
+    4'b0010:
         begin
         result <= data1 - data2;
         end
 
-    4'b0010:
+    4'b0001:
         begin
         result <= data1 * data2;
         end
@@ -156,7 +159,7 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
 
     always @(branch or zero)
     begin
-    if (stall_flag==0)
+    if (stall_flag_ex_in==0)
     
     // #1
     begin
@@ -164,19 +167,20 @@ module EX(stall_flag, clk, rs, rt, sign_ext, ALUSrc, ALUOp, branch, reset, pc, z
         begin
             $display("hello");
             offset = sign_ext<<2;
-            address = offset + pc;
-            assign pcout = address;
+            address = offset + PC.pc;
+            PC.pc = address;
         end
     end
     end
 
-    always@(posedge clk or stall_flag)
+    always@(posedge clk or stall_flag_ex_in)
     begin
-    if (stall_flag==0)
-    
-
-        begin
+    stall_flag_ex_out = stall_flag_ex_in;
+        $display("SSSSSSSSSSSSSSSS\n ex flag", stall_flag_ex_in);
+    if (stall_flag_ex_in==0)
+    begin
         resultOut<=result;
+         
         end
     end
 

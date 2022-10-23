@@ -1,7 +1,8 @@
-module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,alu_src,reg_write, reset);
+module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,alu_src,reg_write, reset, stall_flag_cu_in);
   
   input [5:0] opcode;
   input reset;
+  input stall_flag_cu_in;
   output reg reg_dst,branch,mem_read,mem_to_reg,mem_write,alu_src,reg_write;
   output reg [1:0] alu_op;
   
@@ -13,18 +14,23 @@ module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,a
 
   always @(posedge reset)
   begin
-   reg_dst <= 1'b0;
-   branch <= 1'b0;
-   mem_read <= 1'b0;
-   mem_to_reg <= 1'b0;
-   alu_op <= 2'b00;
-   mem_write <= 1'b0;
-   alu_src <= 1'b0;
-   reg_write <= 1'b0;
+  
+  // if (stall_flag_cu_in == 0)
+
+      reg_dst <= 1'b0;
+      branch <= 1'b0;
+      mem_read <= 1'b0;
+      mem_to_reg <= 1'b0;
+      alu_op <= 2'b00;
+      mem_write <= 1'b0;
+      alu_src <= 1'b0;
+      reg_write <= 1'b0;
   end
 
-  always@(opcode)
+  always@(opcode or stall_flag_cu_in)
     begin
+      if(stall_flag_cu_in == 0)
+      begin
       case (opcode)
 
         RType:           
@@ -94,6 +100,7 @@ module ControlUnit (opcode,reg_dst,branch,mem_read,mem_to_reg,alu_op,mem_write,a
           end
 
 	endcase
+      end
     end
   
   
